@@ -3,7 +3,7 @@ from flask_restful import Resource
 
 from config import app, db, api
 
-
+# Basic message to test if it's working when running
 class HelloWorld(Resource):
     def get(self):
         return {"Message": "Hello, World!"}
