@@ -1,14 +1,35 @@
-from flask import Flask
+from flask import Flask, request, session, make_response, abort
 from flask_restful import Resource
 
 from config import app, db, api
+from models import ApplicationQuestion
 
-# Basic message to test if it's working when running
-class HelloWorld(Resource):
+
+
+
+
+class ApplicationQuestions(Resource):
     def get(self):
-        return {"Message": "Hello, World!"}
+        application_questions = [application_question.to_dict() for application_question in ApplicationQuestion.query.all()]
 
-api.add_resource(HelloWorld, "/hello_world")
+        return make_response(application_questions, 200)
+    
+api.add_resource(ApplicationQuestions, "/application_questions")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
