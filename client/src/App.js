@@ -24,7 +24,7 @@ function App() {
     <div className="App">
 
         <p>
-          Application questions={openEndedQuestions}
+          Application questions: {openEndedQuestions}
         </p>
 
     </div>
