@@ -46,6 +46,35 @@ api.add_resource(Signup, "/signup")
 
 
 
+
+class CheckSession(Resource):
+    def get(self):
+        try:
+            # Query the User table for the user with the stored user_id from the session
+            user = User.query.filter_by(id=session["user_id"]).first()
+
+            # Create a response with the user's information and a 200 status code
+            response = make_response(
+                user.to_dict(),
+                200
+            )
+
+            return response
+        
+        except:
+            # If the session is invalid or user does not exist, return a 401 error
+            abort(401, "unauthorized")
+
+
+api.add_resource(CheckSession, "/check_session")
+
+
+
+
+
+
+
+
 class ApplicationQuestions(Resource):
     def get(self):
         application_questions = [application_question.to_dict() for application_question in ApplicationQuestion.query.all()] 
@@ -54,10 +83,6 @@ class ApplicationQuestions(Resource):
         return make_response(application_questions, 200)
     
 api.add_resource(ApplicationQuestions, "/application_questions")
-
-
-
-
 
 
 
