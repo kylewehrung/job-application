@@ -1,37 +1,28 @@
-import './App.css';
-import { React, useEffect, useState } from "react";
-
+import React, { useState } from "react";
+import { UserContext } from "./context";
+import { Route, useHistory } from "react-router-dom"; 
+import SignUpForm from "./SignUpForm"; 
 
 function App() {
+  const [user, setUser] = useState(null);
+  const history = useHistory();
 
-  const [applicationQuestions, setApplicationQuestions] = useState([])
-
-
-  
-  useEffect(() => {
-    fetch("/application_questions")
-    .then((r) => r.json())
-    .then(setApplicationQuestions)
-  }, [])
-
-
-
-  const openEndedQuestions = applicationQuestions.map((applicationQuestion) => applicationQuestion.open_ended_questions)
-
-
+  const handleLogin = (user) => {
+    setUser(user);
+    history.push("/"); 
+  };
 
   return (
     <div className="App">
-
-        <p>
-          Application questions: {openEndedQuestions}
-        </p>
-
+    <UserContext.Provider value={{ user, setUser }}>
+      <Route path="/">
+        <SignUpForm onLogin={handleLogin} />
+      </Route>
+      </UserContext.Provider>
     </div>
   );
-
-
-
 }
 
+
 export default App;
+
