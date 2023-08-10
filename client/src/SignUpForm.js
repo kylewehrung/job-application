@@ -1,6 +1,11 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import styled from "styled-components";
+
+
+
+
 
 function SignUpForm({ onLogin }) {
   const validationSchema = yup.object({
@@ -59,9 +64,13 @@ function SignUpForm({ onLogin }) {
     },
   });
 
+
+
+
+
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <div>
+    <FormContainer onSubmit={formik.handleSubmit}>
+      <InputContainer>
         <label htmlFor="username">Username</label>
         <input
           type="text"
@@ -74,9 +83,9 @@ function SignUpForm({ onLogin }) {
         {formik.touched.username && formik.errors.username && (
           <div>{formik.errors.username}</div>
         )}
-      </div>
+      </InputContainer>
 
-      <div>
+      <InputContainer>
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -89,9 +98,9 @@ function SignUpForm({ onLogin }) {
         {formik.touched.email && formik.errors.email && (
           <div>{formik.errors.email}</div>
         )}
-      </div>
+      </InputContainer>
 
-      <div>
+      <InputContainer>
         <label htmlFor="password">Password</label>
         <input
           type="password"
@@ -104,9 +113,9 @@ function SignUpForm({ onLogin }) {
         {formik.touched.password && formik.errors.password && (
           <div>{formik.errors.password}</div>
         )}
-      </div>
+      </InputContainer>
 
-      <div>
+      <InputContainer>
         <label htmlFor="passwordConfirmation">Confirm Password</label>
         <input
           type="password"
@@ -120,14 +129,64 @@ function SignUpForm({ onLogin }) {
           formik.errors.passwordConfirmation && (
             <div>{formik.errors.passwordConfirmation}</div>
           )}
-      </div>
+      </InputContainer>
 
-      <button type="submit" disabled={formik.isSubmitting}>
+      <SubmitButton type="submit" disabled={formik.isSubmitting}>
         Sign Up
-      </button>
-    </form>
+      </SubmitButton>
+    </FormContainer>
   );
 }
+
+
+
+
+
+
+
+const FormContainer = styled.form`
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  div {
+    color: red;
+    font-size: 0.8rem;
+  }
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+`;
+
+
+
 
 export default SignUpForm;
 

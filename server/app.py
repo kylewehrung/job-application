@@ -32,7 +32,7 @@ class Signup(Resource):
 
             session["user_id"] = new_user.id
             # Add the new user to the database, commit changes, store the user's ID in the session
-
+            print(new_user.to_dict())
             return new_user.to_dict(), 201
         
         except IntegrityError:
