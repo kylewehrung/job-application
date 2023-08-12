@@ -46,51 +46,6 @@ api.add_resource(Signup, "/signup")
 
 
 
-class Login(Resource):
-    def post(self):
-        data = request.get_json()
-
-        username = data.get("username")
-        email_input = data.get("email")  # Named email_input to avoid conflict
-        password = data.get("password")
-
-        user = User.query.filter(User.username == username).first()
-        email_user = User.query.filter(User.email == email_input).first()  
-
-        if user and email_user:  
-            if user.authenticate(password):
-                session["user_id"] = user.id
-
-                return user.to_dict(), 200
-            
-        return {"error": "401 Unauthorized"}, 401
-
-api.add_resource(Login, "/login")
-
-
-
-
-
-
-class Logout(Resource):
-    def delete(self):
-        if session.get("user_id"):
-            session["user_id"] = None
-            # If the user is authenticated, clear the stored user ID in the session
-
-            return {}, 204
-            # Return an empty response with HTTP status code 204 (No Content)
-        
-        return {"error": "401 Unauthorized"}, 401
-    
-
-api.add_resource(Logout, "/logout")
-
-
-
-
-
-
 
 class CheckSession(Resource):
     def get(self):
