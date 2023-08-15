@@ -1,28 +1,18 @@
-import React, { useState } from "react";
-import { UserContext } from "./context";
-import { Route, useHistory } from "react-router-dom"; 
-import SignUpForm from "./SignUpForm"; 
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SignUpForm from "./SignUpForm";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const history = useHistory();
-
-  const handleLogin = (user) => {
-    setUser(user);
-    history.push("/"); 
-  };
-
   return (
-    <div className="App">
-    <UserContext.Provider value={{ user, setUser }}>
-      <Route path="/">
-        <SignUpForm onLogin={handleLogin} />
-      </Route>
-      </UserContext.Provider>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<SignUpForm />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
-
 
 export default App;
 
