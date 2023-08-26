@@ -2,10 +2,11 @@ from flask import Flask, request, session, make_response, abort
 from flask_restful import Resource
 from sqlalchemy.orm import subqueryload
 from sqlalchemy.exc import IntegrityError
+from flask_cors import CORS
 
 from config import app, db, api
 from models import ApplicationQuestion, User
-
+CORS(app)
 
 
 
