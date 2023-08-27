@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { UserContext } from "./context";
-import {  useHistory } from "react-router-dom";
+import {  useHistory, Route, Switch } from "react-router-dom";
 import Login from "./Login";
 import styled from "styled-components";
+import ApplicationQuestions from "./ApplicationQuestions";
 
 
 
@@ -20,7 +21,7 @@ function App() {
 
   const handleLogin = (user) => {
     setUser(user);
-    history.push('/application_questions');
+    history.push("/application_questions");
   };
 
   if (!user) return <Login handleLogin={handleLogin} />;
@@ -28,7 +29,13 @@ function App() {
   return (
     <AppWrapper>
     <UserContext.Provider value={{ user, setUser }}>
-     
+     <Switch>
+
+      <Route path="/application_questions">
+        <ApplicationQuestions/>
+      </Route>
+
+     </Switch>
       </UserContext.Provider>
     </AppWrapper>
   );
@@ -38,7 +45,6 @@ function App() {
 
 const AppWrapper = styled.div`
   height: 100%;
-  background-image: url("https://i.pinimg.com/originals/cc/9d/37/cc9d37ab453a095b985de4ca33d4b7fc.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
