@@ -16,13 +16,15 @@ function ApplicationQuestions() {
 
     return (
 
-        <Wrapper>
+        <BaseBackground>
+        <Background>
             {questions.map((question) => (
-
+                <Column>
             <p>{question.open_ended_questions}</p>
-
+                </Column>
             ))}
-        </Wrapper>
+            </Background>
+        </BaseBackground>
 
     )
 
@@ -30,12 +32,36 @@ function ApplicationQuestions() {
 
 }
 
-const Wrapper = styled.div`
-  background-image: url("https://images.unsplash.com/photo-1521942132694-5daae96ff62d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjMxNTYxOTE5&ixlib=rb-1.2.1&q=80&w=1080");
-  background-position: center;
+
+const BaseBackground = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("https://www.drodd.com/images14/black15.jpg");
+  background-repeat: no-repeat;
   background-size: cover;
-  width: 100%;
-  height: 100vh;
+  background-position: center center;
+  height: 100vw;
+  width: 100vw;
+  background-attachment: fixed;
+`;
+
+const Background = styled.div`
+  height: 100vw;
+  width: 60vw;
+  background-image: url("https://www.boredart.com/wp-content/uploads/2017/02/cream-yellow.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-bottom: 10px;
+  margin-left: 250px;
+  background-attachment: fixed;
 `;
 
 

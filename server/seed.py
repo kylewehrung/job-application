@@ -1,12 +1,13 @@
 import json
 from config import db
-from models import ApplicationQuestion
+from models import ApplicationQuestion, User
 from app import app
 
 with app.app_context():
     db.create_all()
      # Clear the ApplicationQuestion table before seeding
     db.session.query(ApplicationQuestion).delete()
+    db.session.query(User).delete()
 
     # Seed data for open-ended questions
     open_ended_questions_data = [
