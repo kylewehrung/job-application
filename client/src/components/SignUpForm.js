@@ -15,7 +15,6 @@ function SignUpForm({ handleLogin }) {
 
   const formik = useFormik({
     initialValues: {
-      // username: "",
       email: "",
       password: "",
       passwordConfirmation: "",

@@ -4,23 +4,26 @@ import styled from "styled-components";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
+
+
 function Login({ handleLogin }) {
   const [showLogin, setShowLogin] = useState(false);
 
+
   const validationSchema = yup.object({
-    // username: yup.string().required(),
+    email: yup.string().required(),
     password: yup.string().required(),
   });
 
   const formik = useFormik({
     initialValues: {
-      // username: "",
+      email: "",
       password: "",
     },
     validationSchema,
     onSubmit: (values, { setErrors, setSubmitting }) => {
       setSubmitting(true);
-      fetch("/api/login", {
+      fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,17 +51,6 @@ function Login({ handleLogin }) {
     <FormBackground>
       {showLogin ? (
         <form onSubmit={formik.handleSubmit}>
-
-          {/* <StyledLabel htmlFor="username">Username</StyledLabel>
-          <Column>
-          <StyledInput
-            type="text"
-            id="username"
-            autoComplete="off"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-          />
-          </Column> */}
 
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <Column>

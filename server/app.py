@@ -45,6 +45,34 @@ api.add_resource(Signup, "/signup")
 
 
 
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+
+        email = data.get("email")
+        password = data.get("password")
+        # Extract email and password from the JSON data
+
+        user = User.query.filter(User.email == email).first()
+        # Query the user with the provided email
+
+        if user:
+            if user.authenticate(password):
+                session["user_id"] = user.id
+                # If the user exists and the password is correct, store the user's ID in the session
+
+                return user.to_dict(), 200
+                # Return the authenticated user as JSON response
+            
+        return {"error": "401 Unauthorized"}, 401
+        # If the user doesn't exist, return an error message with HTTP status code 401
+
+api.add_resource(Login, "/login")
+
+
+
+
+
 
 class CheckSession(Resource):
     def get(self):
