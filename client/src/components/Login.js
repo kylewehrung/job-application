@@ -8,13 +8,13 @@ function Login({ handleLogin }) {
   const [showLogin, setShowLogin] = useState(false);
 
   const validationSchema = yup.object({
-    username: yup.string().required(),
+    // username: yup.string().required(),
     password: yup.string().required(),
   });
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      // username: "",
       password: "",
     },
     validationSchema,
@@ -49,7 +49,7 @@ function Login({ handleLogin }) {
       {showLogin ? (
         <form onSubmit={formik.handleSubmit}>
 
-          <StyledLabel htmlFor="username">Username</StyledLabel>
+          {/* <StyledLabel htmlFor="username">Username</StyledLabel>
           <Column>
           <StyledInput
             type="text"
@@ -58,7 +58,7 @@ function Login({ handleLogin }) {
             value={formik.values.username}
             onChange={formik.handleChange}
           />
-          </Column>
+          </Column> */}
 
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <Column>

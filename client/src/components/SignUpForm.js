@@ -5,16 +5,20 @@ import * as yup from "yup";
 
 function SignUpForm({ handleLogin }) {
   const validationSchema = yup.object({
-    username: yup.string().required(),
     email: yup.string().required(),
     password: yup.string().required(),
+    passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required(),
   });
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      // username: "",
       email: "",
       password: "",
+      passwordConfirmation: "",
     },
     validationSchema,
     onSubmit: (values, { setErrors, setSubmitting }) => {
@@ -46,16 +50,6 @@ function SignUpForm({ handleLogin }) {
     <Wrapper>
       <form onSubmit={formik.handleSubmit}>
 
-          <StyledLabel htmlFor="username">Username</StyledLabel>
-          <Column>
-          <StyledInput
-            type="text"
-            id="username"
-            autoComplete="off"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-          />
-          </Column>
 
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <Column>
@@ -78,6 +72,17 @@ function SignUpForm({ handleLogin }) {
             autoComplete="current-password"
           />
           </Column>
+
+      <StyledLabel htmlFor="passwordConfirmation">Password Confirmation</StyledLabel>
+      <Column>
+      <StyledInput
+        type="password"
+        id="passwordConfirmation"
+        value={formik.values.passwordConfirmation}
+        onChange={formik.handleChange}
+        autoComplete="current-password"
+      />
+      </Column>
 
           <button type="submit" disabled={formik.isSubmitting}>
             {formik.isSubmitting ? "Loading..." : "Sign Up"}

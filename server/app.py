@@ -14,16 +14,14 @@ class Signup(Resource):
     def post(self):
         data = request.get_json()
         
-        username = data.get("username")
         email = data.get("email")
         password = data.get("password")
-        # Extract username, email and password from the JSON data
+        # Extract email and password from the JSON data
 
         new_user = User(
-            username=username,
             email=email,
         )
-        # Create a new User instance with the provided username
+        # Create a new User instance with the provided email
 
         new_user.password_hash = password
 
@@ -38,7 +36,7 @@ class Signup(Resource):
         
         except IntegrityError:
             return {"error": "422 Unprocessable Entity"}, 422
-            # If there's an integrity error (e.g., duplicate username), return an error message with HTTP status code 422 (Unprocessable Entity)
+            # If there's an integrity error return an error message with HTTP status code 422 (Unprocessable Entity)
         
 api.add_resource(Signup, "/signup")
 
