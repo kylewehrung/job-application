@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 
 from config import app, db, api
-from models import ApplicationQuestion, User
+from models import ApplicationQuestion, User, Answer
 CORS(app)
 
 
@@ -111,6 +111,47 @@ class ApplicationQuestions(Resource):
     
 api.add_resource(ApplicationQuestions, "/application_questions")
 
+
+
+
+
+
+
+class ApplicationQuestionsById(Resource):
+    def get(self, question_id):
+        # Query for the application question by ID
+        application_question = ApplicationQuestion.query.get(question_id)
+        
+        if not application_question:
+            return make_response({"message": "Question not found"}, 404)
+        
+        # Convert the application question to a dictionary or serialize it as needed
+        question_data = application_question.to_dict()
+        
+        return make_response(question_data, 200)
+    
+
+api.add_resource(ApplicationQuestionsById, "/application_questions/<int:question_id>")
+
+
+
+
+
+class SubmitAnswer(Resource):
+    def post(self, question_id):
+        data = request.get_json()
+        
+        # Assuming data contains the user's answer
+
+        # Create a new Answer record in the database and associate it with the question
+        answer = Answer(question_id=question_id, answer=data['user_answer'])
+        db.session.add(answer)
+        db.session.commit()
+
+        return make_response({"message": "Answer submitted successfully"}, 201)
+
+
+api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_answer")
 
 
 
