@@ -144,11 +144,12 @@ class SubmitAnswer(Resource):
         # Assuming data contains the user's answer
 
         # Create a new Answer record in the database and associate it with the question
-        answer = Answer(question_id=question_id, answer=data['user_answer'])
+        answer = Answer(question_id=question_id, answer=data['answer'])  # Use 'answer' key
         db.session.add(answer)
         db.session.commit()
 
         return make_response({"message": "Answer submitted successfully"}, 201)
+
 
 
 api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_answer")
