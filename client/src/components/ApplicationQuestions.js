@@ -3,54 +3,62 @@ import styled from "styled-components";
 
 function ApplicationQuestions() {
     const [questions, setQuestions] = useState([]);
-    const [answers, setAnswers] = useState({}); // Store user answers in state
+    const [answers, setAnswers] = useState({});
+    const [questionId, setQuestionId] = useState(null); 
 
     useEffect(() => {
         fetch("/application_questions")
-        .then((r) => r.json())
-        .then(setQuestions);
+            .then((r) => r.json())
+            .then(setQuestions);
     }, []);
 
-    // Function to update user answers in state
     const handleAnswerChange = (questionId, answer) => {
         setAnswers({ ...answers, [questionId]: answer });
     };
 
-    // Function to submit answers to the backend
     const submitAnswers = () => {
-        // Send 'answers' to the backend using fetch or your preferred method
-        fetch("/submit_answers", {
+        if (questionId === null) {
+            // No question selected, handle this case as needed
+            return;
+        }
+
+        // Send 'answers' to the backend using fetch 
+        fetch(`/application_questions/${questionId}/submit_answer`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(answers),
+            body: JSON.stringify({ answer: answers[questionId] || "" }),
         })
-        .then((response) => {
-            // Handle the response as needed
-        });
+            .then((response) => {
+                // Handle the response better in the future
+            });
     };
 
     return (
         <BaseBackground>
             <Background>
-                {questions.map((question) => (
-                    <Column key={question.id}>
-                        <p>{question.open_ended_questions}</p>
-                        <input
-                            type="text"
-                            placeholder="Enter your answer"
-                            value={answers[question.id] || ""}
-                            onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-                        />
-                    </Column>
-                ))}
+                {questions
+                    .filter((question) => question.open_ended_questions)
+                    .map((question) => (
+                        <Column key={question.id}>
+                            <p>{question.open_ended_questions}</p>
+                            <input
+                                type="text"
+                                placeholder="Enter your answer"
+                                value={answers[question.id] || ""}
+                                onChange={(e) => {
+                                    handleAnswerChange(question.id, e.target.value);
+                                    setQuestionId(question.id); 
+                                }}
+                            />
+                        </Column>
+                    ))}
                 <button onClick={submitAnswers}>Submit Answers</button>
             </Background>
         </BaseBackground>
     );
 }
-
 
 const BaseBackground = styled.div`
   display: flex;
@@ -82,7 +90,5 @@ const Column = styled.div`
   margin-left: 250px;
   background-attachment: fixed;
 `;
-
-
 
 export default ApplicationQuestions;
