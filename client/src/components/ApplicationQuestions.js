@@ -72,15 +72,16 @@ const BaseBackground = styled.div`
   width: 100vw;
   background-attachment: fixed;
 `;
-
 const Background = styled.div`
   height: 100vw;
   width: 60vw;
-  background-image: url("https://www.boredart.com/wp-content/uploads/2017/02/cream-yellow.png");
+  background-color: lightblue;
+  /* background-image: url("https://www.boredart.com/wp-content/uploads/2017/02/cream-yellow.png"); */
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
 `;
+
 
 const Column = styled.div`
   display: flex;
