@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom"; 
 import { useUser } from "./context";
+import YesNoQuestions from "./YesNoQuestions";
 
 
 function ApplicationQuestions() {
@@ -48,12 +49,11 @@ function ApplicationQuestions() {
             body: JSON.stringify({ answer: answers[questionId] || "" }),
         })
         .then((response) => {
-            console.log(answers)
-            // Handle the response better in the future
-            setIsSubmitted(true); // Set submission status to true
             history.push(`/user_answers/${user.id}`, { answers }); // Redirect to another page
         });
     };
+
+
 
     return (
         <BaseBackground>
@@ -74,11 +74,15 @@ function ApplicationQuestions() {
                             />
                         </Column>
                     ))}
+                <div>
+                    <YesNoQuestions questions={questions}/>
+                </div>
                 <button onClick={handleSubmit}>Submit Answers</button>
             </Background>
         </BaseBackground>
     );
 }
+
 
 const BaseBackground = styled.div`
   display: flex;
