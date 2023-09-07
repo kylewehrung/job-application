@@ -141,21 +141,21 @@ api.add_resource(ApplicationQuestionListResource, '/questions')
 
 
 
-class ApplicationQuestionsById(Resource):
-    def get(self, question_id):
-        # Query for the application question by ID
-        application_question = ApplicationQuestion.query.get(question_id)
+# class ApplicationQuestionsById(Resource):
+#     def get(self, question_id):
+#         # Query for the application question by ID
+#         application_question = ApplicationQuestion.query.get(question_id)
         
-        if not application_question:
-            return make_response({"message": "Question not found"}, 404)
+#         if not application_question:
+#             return make_response({"message": "Question not found"}, 404)
         
-        # Convert the application question to a dictionary or serialize it as needed
-        question_data = application_question.to_dict()
+#         # Convert the application question to a dictionary or serialize it as needed
+#         question_data = application_question.to_dict()
         
-        return make_response(question_data, 200)
+#         return make_response(question_data, 200)
     
 
-api.add_resource(ApplicationQuestionsById, "/application_questions/<int:question_id>")
+# api.add_resource(ApplicationQuestionsById, "/application_questions/<int:question_id>")
 
 
 
@@ -178,6 +178,25 @@ class SubmitAnswer(Resource):
 
 api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_answer")
 
+
+
+
+
+
+
+class UserAllAnswers(Resource):
+    def get(self):
+        # You need a way to identify the user (e.g., by user ID or username)
+        # Assuming you have a way to identify the user, you can retrieve all their answers here
+        user_id = 1  # Replace with the actual user ID
+        user = User.query.get(user_id)
+        if user:
+            user_answers = [{"question_id": answer.question_id, "answer": answer.answer} for answer in user.answers]
+            return {"user_id": user.id, "answers": user_answers}
+        else:
+            return {"message": "User not found"}, 404
+
+api.add_resource(UserAllAnswers, "/user_all_answers")
 
 
 
