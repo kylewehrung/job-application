@@ -9,9 +9,14 @@ function ApplicationQuestions() {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
     const [questionId, setQuestionId] = useState(null);
-    const [isSubmitted, setIsSubmitted] = useState(false); 
     const history = useHistory(); 
     const { user } = useUser();
+
+
+
+    const handleYesNoChange = (questionId, option) => {
+        setAnswers({ ...answers, [questionId]: option });
+      };
 
 
 
@@ -75,7 +80,10 @@ function ApplicationQuestions() {
                         </Column>
                     ))}
                 <div>
-                    <YesNoQuestions questions={questions}/>
+                    <YesNoQuestions 
+                    questions={questions}
+                    handleYesNoChange={handleYesNoChange}
+                    />
                 </div>
                 <button onClick={handleSubmit}>Submit Answers</button>
             </Background>
