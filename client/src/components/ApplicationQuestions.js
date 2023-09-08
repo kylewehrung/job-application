@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom"; 
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
+import MultipleChoiceQuestions from "./MultipleChoiceQuestions";
 
 
 function ApplicationQuestions() {
@@ -19,6 +20,11 @@ function ApplicationQuestions() {
       };
 
 
+      const handleMultipleChoiceChange = (questionId, option) => {
+        setAnswers({ ...answers, [questionId]: option });
+      };
+
+
 
     useEffect(() => {
         fetch("/questions")
@@ -26,7 +32,6 @@ function ApplicationQuestions() {
             if (!response.ok) {
                 throw new Error("Failed to fetch question data.");
             }
-            console.log("API Response:", response);
             return response.json();
         })
         .then((data) => {
@@ -83,6 +88,12 @@ function ApplicationQuestions() {
                     <YesNoQuestions 
                     questions={questions}
                     handleYesNoChange={handleYesNoChange}
+                    />
+                </div>
+                <div>
+                    <MultipleChoiceQuestions 
+                    questions={questions}
+                    handleMultipleChoiceChange={handleMultipleChoiceChange}
                     />
                 </div>
                 <button onClick={handleSubmit}>Submit Answers</button>

@@ -103,16 +103,6 @@ api.add_resource(CheckSession, "/check_session")
 
 
 
-# This endpoint didn't work, don't fully know why yet so I'm keeping it until I do
-# class ApplicationQuestions(Resource):
-#     def get(self):
-#         application_questions = [application_question.to_dict() for application_question in ApplicationQuestion.query.all()] 
-#         # Query for all application questions
-
-#         return make_response(application_questions, 200)
-    
-# api.add_resource(ApplicationQuestions, "/application_questions")
-
 
 
 
@@ -140,22 +130,6 @@ api.add_resource(ApplicationQuestionListResource, '/questions')
 
 
 
-
-# class ApplicationQuestionsById(Resource):
-#     def get(self, question_id):
-#         # Query for the application question by ID
-#         application_question = ApplicationQuestion.query.get(question_id)
-        
-#         if not application_question:
-#             return make_response({"message": "Question not found"}, 404)
-        
-#         # Convert the application question to a dictionary or serialize it as needed
-#         question_data = application_question.to_dict()
-        
-#         return make_response(question_data, 200)
-    
-
-# api.add_resource(ApplicationQuestionsById, "/application_questions/<int:question_id>")
 
 
 
