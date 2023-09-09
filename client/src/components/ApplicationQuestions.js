@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom"; 
+import { useUser } from "./context";
+
 
 function ApplicationQuestions() {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
-    const [questionId, setQuestionId] = useState(null); 
+    const [questionId, setQuestionId] = useState(null);
+    const [isSubmitted, setIsSubmitted] = useState(false); 
+    const history = useHistory(); 
+    const { user } = useUser();
 
-    
+
+
     useEffect(() => {
         fetch("/questions")
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch question data.");
             }
-            console.log("API Response:", response); // Checking the response
+            console.log("API Response:", response);
             return response.json();
         })
-          .then((data) => {
+        .then((data) => {
             setQuestions(data);
-
-          })
-          .catch((error) => console.log("catch error:", error));
+        })
+        .catch((error) => console.log("catch error:", error));
     }, []);
 
-    
+
+
 
     const handleAnswerChange = (questionId, answer) => {
         setAnswers({ ...answers, [questionId]: answer });
@@ -31,21 +38,22 @@ function ApplicationQuestions() {
 
 
 
-    // Send 'answers' to the backend using fetch
-        const handleSubmit = (e) => { 
-            e.preventDefault();
-            fetch(`/application_questions/${questionId}/submit_answer`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ answer: answers[questionId] || "" }),
-            })
-                .then((response) => {
-                    // Handle the response better in the future
-                });
-        };
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        fetch(`/application_questions/${questionId}/submit_answer`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ answer: answers[questionId] || "" }),
+        })
+        .then((response) => {
+            console.log(answers)
+            // Handle the response better in the future
+            setIsSubmitted(true); // Set submission status to true
+            history.push(`/user_answers/${user.id}`, { answers }); // Redirect to another page
+        });
+    };
 
     return (
         <BaseBackground>
@@ -88,7 +96,6 @@ const Background = styled.div`
   height: 100vw;
   width: 60vw;
   background-color: lightblue;
-  /* background-image: url("https://www.boredart.com/wp-content/uploads/2017/02/cream-yellow.png"); */
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
