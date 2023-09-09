@@ -6,34 +6,46 @@ function ApplicationQuestions() {
     const [answers, setAnswers] = useState({});
     const [questionId, setQuestionId] = useState(null); 
 
+    
     useEffect(() => {
-        fetch("/application_questions")
-            .then((r) => r.json())
-            .then(setQuestions);
+        fetch("/questions")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch question data.");
+            }
+            console.log("API Response:", response); // Checking the response
+            return response.json();
+        })
+          .then((data) => {
+            setQuestions(data);
+
+          })
+          .catch((error) => console.log("catch error:", error));
     }, []);
+
+    
 
     const handleAnswerChange = (questionId, answer) => {
         setAnswers({ ...answers, [questionId]: answer });
     };
 
-    const submitAnswers = () => {
-        if (questionId === null) {
-            // No question selected, handle this case as needed
-            return;
-        }
 
-        // Send 'answers' to the backend using fetch 
-        fetch(`/application_questions/${questionId}/submit_answer`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ answer: answers[questionId] || "" }),
-        })
-            .then((response) => {
-                // Handle the response better in the future
-            });
-    };
+
+    // Send 'answers' to the backend using fetch
+        const handleSubmit = (e) => { 
+            e.preventDefault();
+            fetch(`/application_questions/${questionId}/submit_answer`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ answer: answers[questionId] || "" }),
+            })
+                .then((response) => {
+                    // Handle the response better in the future
+                });
+        };
+
 
     return (
         <BaseBackground>
@@ -54,7 +66,7 @@ function ApplicationQuestions() {
                             />
                         </Column>
                     ))}
-                <button onClick={submitAnswers}>Submit Answers</button>
+                <button onClick={handleSubmit}>Submit Answers</button>
             </Background>
         </BaseBackground>
     );

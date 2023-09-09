@@ -1,8 +1,10 @@
-from flask import Flask, request, session, make_response, abort
+from flask import Flask, request, session, make_response, abort, jsonify
 from flask_restful import Resource
 from sqlalchemy.orm import subqueryload
 from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
+import json
+
 
 from config import app, db, api
 from models import ApplicationQuestion, User, Answer
@@ -101,15 +103,37 @@ api.add_resource(CheckSession, "/check_session")
 
 
 
+# This endpoint didn't work, don't fully know why yet so I'm keeping it until I do
+# class ApplicationQuestions(Resource):
+#     def get(self):
+#         application_questions = [application_question.to_dict() for application_question in ApplicationQuestion.query.all()] 
+#         # Query for all application questions
 
-class ApplicationQuestions(Resource):
-    def get(self):
-        application_questions = [application_question.to_dict() for application_question in ApplicationQuestion.query.all()] 
-        # Query for all application questions
-
-        return make_response(application_questions, 200)
+#         return make_response(application_questions, 200)
     
-api.add_resource(ApplicationQuestions, "/application_questions")
+# api.add_resource(ApplicationQuestions, "/application_questions")
+
+
+
+
+
+class ApplicationQuestionListResource(Resource):
+    def get(self):
+        questions = ApplicationQuestion.query.all()
+        questions_data = []
+
+        for question in questions:
+            question_data = {
+                'id': question.id,
+                'open_ended_questions': question.open_ended_questions,
+                'yes_no_questions': question.yes_no_questions,
+                'multiple_choice_questions': json.loads(question.multiple_choice_questions) if question.multiple_choice_questions else None
+            }
+            questions_data.append(question_data)
+
+        return jsonify(questions_data)
+
+api.add_resource(ApplicationQuestionListResource, '/questions')
 
 
 
