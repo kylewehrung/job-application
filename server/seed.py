@@ -23,9 +23,10 @@ with app.app_context():
     ]
 
     yes_no_questions_data = [
-        {"question": "Are you now legally authorized to work in the posted primary location for this requisition?"},
-        {"question": "Will you require sponsorship in the future for this location (for example, if you are on a temporary visa)?"},
+        {"id": 1, "question": "Are you now legally authorized to work in the posted primary location for this requisition?"},
+        {"id": 2, "question": "Will you require sponsorship in the future for this location (for example, if you are on a temporary visa)?"},
     ]
+
 
 
     multiple_choice_questions_data = [
