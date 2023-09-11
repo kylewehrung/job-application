@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-function YesNoQuestions({ questions }) {
-  const [selectedOptions, setSelectedOptions] = useState({});
+function YesNoQuestions({ questions, handleYesNoChange }) {
 
-  const handleOptionChange = (questionId, option) => {
-    setSelectedOptions({
-      ...selectedOptions,
-      [questionId]: option,
-    });
-  };
 
   return (
     <div>
@@ -23,8 +16,9 @@ function YesNoQuestions({ questions }) {
               type="radio"
               name={`yesNoOption-${question.id}`}
               value="Yes"
-              checked={selectedOptions[question.id] === "Yes"}
-              onChange={() => handleOptionChange(question.id, "Yes")}
+              onChange={() => {
+                  handleYesNoChange(question.id, "Yes");
+              }}
             />{" "}
             Yes
           </RadioLabel>
@@ -33,8 +27,9 @@ function YesNoQuestions({ questions }) {
               type="radio"
               name={`yesNoOption-${question.id}`}
               value="No"
-              checked={selectedOptions[question.id] === "No"}
-              onChange={() => handleOptionChange(question.id, "No")}
+              onChange={() => {
+                  handleYesNoChange(question.id, "No");
+              }}
             />{" "}
             No
           </RadioLabel>
@@ -43,6 +38,7 @@ function YesNoQuestions({ questions }) {
     </div>
   );
 }
+
 
 const Column = styled.div`
   display: flex;
