@@ -9,6 +9,7 @@ with app.app_context():
     db.session.query(ApplicationQuestion).delete()
     db.session.query(User).delete()
 
+
     # Seed data for open-ended questions
     open_ended_questions_data = [
         {"question": "Full name"},
@@ -30,18 +31,18 @@ with app.app_context():
 
 
     multiple_choice_questions_data = [
-        {
+        {   "id": 1,
             "question": "How do you identify?",
             "choices": ["Male", "Female", "Non-Binary", "Gender is a construct", "Decline not to answer"],
         },
-        {
+        {   "id": 2,
             "question": "What's your race?",
             "choices": ["Hispanic or Latino", "White (Not Hispanic or Latino)", "Black or African American (Not Hispanic or Latino)",
                          "Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)",
                            "Asian (Not Hispanic or Latino)", "American Indian or Alaska Native (Not Hispanic or Latino)", "Two or More Races (Not Hispanic or Latino)",
                          "Decline to self-identify"  ],
         },
-        {
+        {   "id": 3,
             "question": "Are you a veteran?",
             "choices": ["I am veteran", "I am not a veteran", "'Decline to self-identify"]
         }
