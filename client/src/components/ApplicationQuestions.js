@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Input from "./styles/Input"
 import { useHistory } from "react-router-dom"; 
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
@@ -67,13 +68,13 @@ function ApplicationQuestions() {
 
     return (
         <BaseBackground>
-            <Background>
+            <>
                 {questions
                     .filter((question) => question.open_ended_questions)
                     .map((question) => (
                         <Column key={question.id}>
                             <p>{question.open_ended_questions}</p>
-                            <input
+                            <Input
                                 type="text"
                                 placeholder="Enter your answer"
                                 value={answers[question.id] || ""}
@@ -97,7 +98,7 @@ function ApplicationQuestions() {
                     />
                 </div>
                 <button onClick={handleSubmit}>Submit Answers</button>
-            </Background>
+            </>
         </BaseBackground>
     );
 }
@@ -107,22 +108,27 @@ const BaseBackground = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url("https://www.drodd.com/images14/black15.jpg");
+  color: black;
+  background-image: linear-gradient(rgba(71, 30, 233, 0.5), rgba(71, 30, 233, 0.5));
+  ${'' /* opacity: 0.55; */}
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
   height: 100vw;
   width: 100vw;
   background-attachment: fixed;
+
 `;
-const Background = styled.div`
-  height: 100vw;
-  width: 60vw;
-  background-color: lightblue;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-`;
+
+
+// const Background = styled.div`
+//   height: 100vw;
+//   width: 60vw;
+//   background-color: #471EE9;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   background-attachment: fixed;
+// `;
 
 
 const Column = styled.div`
@@ -130,7 +136,7 @@ const Column = styled.div`
   flex-direction: column;
   align-items: left;
   margin-bottom: 10px;
-  margin-left: 250px;
+  ${'' /* margin-left: 250px; */}
   background-attachment: fixed;
 `;
 

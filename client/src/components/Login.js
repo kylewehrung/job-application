@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SignUpForm from "./SignUpForm"; 
 import styled from "styled-components";
+import Button from "./styles/Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -73,9 +74,9 @@ function Login({ handleLogin }) {
             autoComplete="current-password"
           />
           </Column>
-          <button type="submit">
+          <Button type="submit">
             {formik.isSubmitting ? "Loading..." : "Login"}
-          </button>
+          </Button>
           {formik.errors &&
             Object.values(formik.errors).map((err) => (
               <Error key={err}>{err}</Error>
@@ -83,9 +84,9 @@ function Login({ handleLogin }) {
             <Column>
           <p>
             Not an Only Choss member?&nbsp;
-            <button color="secondary" onClick={() => setShowLogin(false)}>
+            <Button color="secondary" onClick={() => setShowLogin(false)}>
               Sign Up
-            </button>
+            </Button>
           </p>
           </Column>
         </form>
@@ -95,9 +96,9 @@ function Login({ handleLogin }) {
           
           <p>
             Already a Choss Member?&nbsp;
-            <button color="secondary" onClick={() => setShowLogin(true)}>
+            <Button color="secondary" onClick={() => setShowLogin(true)}>
               Log In
-            </button>
+            </Button>
           </p>
         </FormBackground>
       )}
