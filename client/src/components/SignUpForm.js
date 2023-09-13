@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Button from "./styles/Button";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -84,9 +85,9 @@ function SignUpForm({ handleLogin }) {
       />
       </Column>
 
-          <button type="submit" disabled={formik.isSubmitting}>
+          <Button type="submit" disabled={formik.isSubmitting}>
             {formik.isSubmitting ? "Loading..." : "Sign Up"}
-          </button>
+          </Button>
 
           {formik.errors &&
             Object.values(formik.errors).map((err) => (

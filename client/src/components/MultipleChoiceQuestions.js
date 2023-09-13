@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Label from "./styles/Label";
 
 function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
 
@@ -16,9 +17,9 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
           return (
             <Column key={question.id}>
               <p>{choicesObject.question}</p>
-              <label htmlFor={`multipleChoiceSelect-${question.id}`}>
+              <Label htmlFor={`multipleChoiceSelect-${question.id}`}>
                 Choose an option:
-              </label>
+              </Label>
 
               <select
                 name={`multipleChoiceSelect-${question.id}`}

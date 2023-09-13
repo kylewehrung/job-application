@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import Input from "./styles/Input";
+import Label from "./styles/Label";
 
 function YesNoQuestions({ questions, handleYesNoChange }) {
 
@@ -11,8 +13,8 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
         .map((question) => (
         <Column key={question.id}>
           <p>{question.yes_no_questions}</p>
-          <RadioLabel>
-            <input
+          <Label>
+            <Input
               type="radio"
               name={`yesNoOption-${question.id}`}
               value="Yes"
@@ -21,9 +23,9 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
               }}
             />{" "}
             Yes
-          </RadioLabel>
-          <RadioLabel>
-            <input
+          </Label>
+          <Label>
+            <Input
               type="radio"
               name={`yesNoOption-${question.id}`}
               value="No"
@@ -32,7 +34,7 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
               }}
             />{" "}
             No
-          </RadioLabel>
+          </Label>
         </Column>
       ))}
     </div>
@@ -49,10 +51,6 @@ const Column = styled.div`
   background-attachment: fixed;
 `;
 
-const RadioLabel = styled.label`
-  display: block;
-  margin-top: 5px;
-`;
 
 export default YesNoQuestions;
 
