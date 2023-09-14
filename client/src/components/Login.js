@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SignUpForm from "./SignUpForm"; 
 import styled from "styled-components";
 import Button from "./styles/Button";
+import Input from "./styles/Input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -55,7 +56,7 @@ function Login({ handleLogin }) {
 
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <Column>
-          <StyledInput
+          <Input
             type="text"
             id="email"
             value={formik.values.email}
@@ -66,7 +67,7 @@ function Login({ handleLogin }) {
 
           <StyledLabel htmlFor="password">Password</StyledLabel>
           <Column>
-          <StyledInput
+          <Input
             type="password"
             id="password"
             value={formik.values.password}
@@ -166,14 +167,14 @@ const StyledLabel = styled.label`
 `;
 
 
-const StyledInput = styled.input`
-  width: 500px;
-  height: 40px; 
-  padding: 20px;
-  border-radius: 25px;
-  font-size: 24px;
-  opacity: 0.8;
-`;
+// const StyledInput = styled.input`
+//   width: 500px;
+//   height: 40px; 
+//   padding: 20px;
+//   border-radius: 25px;
+//   font-size: 24px;
+//   opacity: 0.8;
+// `;
 
 
 const Error = styled.div`

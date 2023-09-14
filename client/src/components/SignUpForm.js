@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "./styles/Button";
+import Input from "./styles/Input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 function SignUpForm({ handleLogin }) {
+
+  
   const validationSchema = yup.object({
     email: yup.string().email("Invalid email format").required("Email is required"),
     password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
@@ -47,6 +50,8 @@ function SignUpForm({ handleLogin }) {
     },
   });
 
+
+
   return (
     <Wrapper>
       <form onSubmit={formik.handleSubmit}>
@@ -54,7 +59,7 @@ function SignUpForm({ handleLogin }) {
 
           <StyledLabel htmlFor="email">Email</StyledLabel>
           <Column>
-          <StyledInput
+          <Input
             type="text"
             id="email"
             value={formik.values.email}
@@ -65,7 +70,7 @@ function SignUpForm({ handleLogin }) {
 
           <StyledLabel htmlFor="password">Password</StyledLabel>
           <Column>
-          <StyledInput
+          <Input
             type="password"
             id="password"
             value={formik.values.password}
@@ -76,7 +81,7 @@ function SignUpForm({ handleLogin }) {
 
       <StyledLabel htmlFor="passwordConfirmation">Password Confirmation</StyledLabel>
       <Column>
-      <StyledInput
+      <Input
         type="password"
         id="passwordConfirmation"
         value={formik.values.passwordConfirmation}
@@ -125,14 +130,14 @@ const StyledLabel = styled.label`
 `;
 
 
-const StyledInput = styled.input`
-  width: 500px;
-  height: 40px; 
-  padding: 20px;
-  border-radius: 25px;
-  font-size: 24px;
-  opacity: 0.8;
-`;
+// const StyledInput = styled.input`
+//   width: 500px;
+//   height: 40px; 
+//   padding: 20px;
+//   border-radius: 25px;
+//   font-size: 24px;
+//   opacity: 0.8;
+// `;
 
 
 
