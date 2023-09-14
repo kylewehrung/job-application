@@ -78,7 +78,12 @@ function ApplicationQuestions() {
                     <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
                     <Input
                       type="text"
-                      placeholder="Enter your answer"
+                      placeholder={
+                      question.id < 8
+                        ? `Enter Your ${question.open_ended_questions}`
+                        : "Enter Your Answer"
+                    }
+
                       value={answers[question.id] || ""}
                       onChange={(e) => {
                         handleAnswerChange(question.id, e.target.value);
@@ -103,6 +108,10 @@ function ApplicationQuestions() {
         </BaseBackground>
       );
     }
+
+
+
+
     
     const BaseBackground = styled.div`
       display: flex;
@@ -139,7 +148,7 @@ function ApplicationQuestions() {
     `;
     
     const StyledParagraph = styled.p`
-      margin: 0; 
+      margin: 0;
     `;
     
     export default ApplicationQuestions;
