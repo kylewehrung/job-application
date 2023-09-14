@@ -7,7 +7,7 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
 
 
   return (
-    <div>
+    <Column>
       {questions
         .filter((question) => question.multiple_choice_questions)
         .map((question) => {
@@ -38,7 +38,7 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
             </Column>
           );
         })}
-    </div>
+    </Column>
   );
 }
 
@@ -47,7 +47,6 @@ const Column = styled.div`
   flex-direction: column;
   align-items: left;
   margin-bottom: 10px;
-  margin-left: 250px;
   background-attachment: fixed;
 `;
 

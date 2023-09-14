@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from "./styles/Input"
+import Button from "./styles/Button";
 import { useHistory } from "react-router-dom"; 
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
@@ -68,76 +69,77 @@ function ApplicationQuestions() {
 
     return (
         <BaseBackground>
-            <>
-                {questions
-                    .filter((question) => question.open_ended_questions)
-                    .map((question) => (
-                        <Column key={question.id}>
-                            <p>{question.open_ended_questions}</p>
-                            <Input
-                                type="text"
-                                placeholder="Enter your answer"
-                                value={answers[question.id] || ""}
-                                onChange={(e) => {
-                                    handleAnswerChange(question.id, e.target.value);
-                                    setQuestionId(question.id); 
-                                }}
-                            />
-                        </Column>
-                    ))}
-                <div>
-                    <YesNoQuestions 
-                    questions={questions}
-                    handleYesNoChange={handleYesNoChange}
+          <Background>
+            <Content>
+              {questions
+                .filter((question) => question.open_ended_questions)
+                .map((question) => (
+                  <Column key={question.id}>
+                    <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
+                    <Input
+                      type="text"
+                      placeholder="Enter your answer"
+                      value={answers[question.id] || ""}
+                      onChange={(e) => {
+                        handleAnswerChange(question.id, e.target.value);
+                        setQuestionId(question.id);
+                      }}
                     />
-                </div>
-                <div>
-                    <MultipleChoiceQuestions 
-                    questions={questions}
-                    handleMultipleChoiceChange={handleMultipleChoiceChange}
-                    />
-                </div>
-                <button onClick={handleSubmit}>Submit Answers</button>
-            </>
+                  </Column>
+                ))}
+              <div>
+                <YesNoQuestions
+                  questions={questions}
+                  handleYesNoChange={handleYesNoChange}
+                />
+                <MultipleChoiceQuestions
+                  questions={questions}
+                  handleMultipleChoiceChange={handleMultipleChoiceChange}
+                />
+              </div>
+              <Button onClick={handleSubmit}>Submit Answers</Button>
+            </Content>
+          </Background>
         </BaseBackground>
-    );
-}
-
-
-const BaseBackground = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: black;
-  background-image: linear-gradient(rgba(71, 30, 233, 0.5), rgba(71, 30, 233, 0.5));
-  ${'' /* opacity: 0.55; */}
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  height: 100vw;
-  width: 100vw;
-  background-attachment: fixed;
-
-`;
-
-
-// const Background = styled.div`
-//   height: 100vw;
-//   width: 60vw;
-//   background-color: #471EE9;
-//   background-repeat: no-repeat;
-//   background-size: cover;
-//   background-attachment: fixed;
-// `;
-
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-bottom: 10px;
-  ${'' /* margin-left: 250px; */}
-  background-attachment: fixed;
-`;
-
-export default ApplicationQuestions;
+      );
+    }
+    
+    const BaseBackground = styled.div`
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: black;
+      background-color: white;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      min-height: 100vh;
+    `;
+    
+    const Background = styled.div`
+      width: 60vw;
+      background-color: #f8f0e3;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+    `;
+    
+    const Content = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    `;
+    
+    const Column = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: left;
+      margin-bottom: 35px;
+      text-align: left; 
+    `;
+    
+    const StyledParagraph = styled.p`
+      margin: 0; 
+    `;
+    
+    export default ApplicationQuestions;
