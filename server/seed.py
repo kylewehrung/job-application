@@ -33,7 +33,7 @@ with app.app_context():
     multiple_choice_questions_data = [
         {   "id": 1,
             "question": "How do you identify?",
-            "choices": ["Male", "Female", "Non-Binary", "Gender is a construct", "Decline not to answer"],
+            "choices": ["Male", "Female", "Non-Binary", "Gender is a construct", "Decline to answer"],
         },
         {   "id": 2,
             "question": "What's your race?",
@@ -44,7 +44,7 @@ with app.app_context():
         },
         {   "id": 3,
             "question": "Are you a veteran?",
-            "choices": ["I am veteran", "I am not a veteran", "'Decline to self-identify"]
+            "choices": ["I am veteran", "I am not a veteran", "Decline to self-identify"]
         }
     ]
 

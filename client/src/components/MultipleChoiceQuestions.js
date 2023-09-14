@@ -22,6 +22,7 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
               </Label>
 
               <select
+                class="form-select form-select-lg mb-3"
                 name={`multipleChoiceSelect-${question.id}`}
                 id={`multipleChoiceSelect-${question.id}`}
                 onChange={(e) => {
