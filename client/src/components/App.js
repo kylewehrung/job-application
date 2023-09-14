@@ -37,7 +37,7 @@ function App() {
       </Route>
     
       <Route path="/user_answers/:userId" >
-      <UserAnswers/>
+      <UserAnswers userEmail={user.email} />
       </Route>
 
      </Switch>
