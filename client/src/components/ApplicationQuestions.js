@@ -12,6 +12,7 @@ function ApplicationQuestions() {
   const [answers, setAnswers] = useState({});
   const [questionId, setQuestionId] = useState(null);
   const [file, setFile] = useState(null); // State to manage file uploads
+  const [emailFromResume, setEmailFromResume] = useState(""); // State to store email 
   const history = useHistory();
   const { user } = useUser();
 
@@ -37,13 +38,45 @@ function ApplicationQuestions() {
       .catch((error) => console.log("catch error:", error));
   }, []);
 
-  const handleAnswerChange = (questionId, answer) => {
-    setAnswers({ ...answers, [questionId]: answer });
+  const parseFileData = (fileData) => {
+    // Parsing logic to check for an email address
+    const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/;
+    const match = fileData.match(emailRegex);
+
+    if (match) {
+      // Extracted email address
+      const extractedEmail = match[0];
+      return extractedEmail;
+    } else {
+
+      return null;
+    }
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileData = e.target.result;
+
+        // Parse the file data and extract the email address
+        const extractedEmail = parseFileData(fileData);
+
+        // If an email address is found, set it in state
+        if (extractedEmail) {
+          setEmailFromResume(extractedEmail);
+        }
+      };
+
+      reader.readAsText(selectedFile);
+    }
+  };
+
+  const handleAnswerChange = (questionId, answer) => {
+    setAnswers({ ...answers, [questionId]: answer });
   };
 
   const handleSubmit = (e) => {
@@ -52,7 +85,8 @@ function ApplicationQuestions() {
     // Create a FormData object to send the file
     const formData = new FormData();
     formData.append("file", file);
-    // Add other form data to the formData object here in the future
+
+    // Add form data to the formData object here in the future:
 
     fetch(`/application_questions/${questionId}/submit_answer`, {
       method: "POST",
@@ -73,12 +107,25 @@ function ApplicationQuestions() {
           {/* Single file upload input */}
           <div className="mb-3">
             <label htmlFor="fileInput" className="form-label">
-              Upload File
+              Upload Resume
             </label>
             <input
               type="file"
               id="fileInput"
               onChange={handleFileChange}
+            />
+          </div>
+
+          {/* Email input */}
+          <div className="mb-3">
+            <label htmlFor="emailInput" className="form-label">
+              Email from Resume
+            </label>
+            <input
+              type="text"
+              id="emailInput"
+              value={emailFromResume}
+              readOnly // Make the input read-only
             />
           </div>
 
@@ -159,4 +206,5 @@ const StyledParagraph = styled.p`
 `;
 
 export default ApplicationQuestions;
+
 
