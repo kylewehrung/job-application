@@ -40,7 +40,8 @@ function ApplicationQuestions() {
 
   const parseFileData = (fileData) => {
     // Parsing logic to check for an email address
-    const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
     const match = fileData.match(emailRegex);
 
     if (match) {
@@ -116,25 +117,13 @@ function ApplicationQuestions() {
             />
           </div>
 
-          {/* Email input */}
-          <div className="mb-3">
-            <label htmlFor="emailInput" className="form-label">
-              Email from Resume
-            </label>
-            <input
-              type="text"
-              id="emailInput"
-              value={emailFromResume}
-              readOnly // Make the input read-only
-            />
-          </div>
 
-          {/* Map and render questions */}
           {questions
             .filter((question) => question.open_ended_questions)
             .map((question) => (
               <Column key={question.id}>
-                <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
+                <StyledParagraph>{question.open_ended_questions}</StyledParagraph> 
+              
                 <Input
                   type="text"
                   placeholder={
@@ -142,7 +131,12 @@ function ApplicationQuestions() {
                       ? `Enter Your ${question.open_ended_questions}`
                       : "Enter Your Answer"
                   }
-                  value={answers[question.id] || ""}
+
+                  value={
+                    question.id === 2 
+                    ? emailFromResume
+                    : answers[question.id] || ""}
+
                   onChange={(e) => {
                     handleAnswerChange(question.id, e.target.value);
                     setQuestionId(question.id);
