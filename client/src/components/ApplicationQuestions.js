@@ -6,6 +6,8 @@ import { useHistory } from "react-router-dom";
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
 import MultipleChoiceQuestions from "./MultipleChoiceQuestions";
+import { isEmail } from 'validator';
+
 
 function ApplicationQuestions() {
   const [questions, setQuestions] = useState([]);
@@ -38,47 +40,49 @@ function ApplicationQuestions() {
       .catch((error) => console.log("catch error:", error));
   }, []);
 
-  const parseFileData = (fileData) => {
-    // Parsing logic to check for an email address
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-    const match = fileData.match(emailRegex);
 
-    if (match) {
-      // Extracted email address
-      const extractedEmail = match[0];
-      return extractedEmail;
-    } else {
 
-      return null;
-    }
-  };
+
+
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-
+  
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        
         const fileData = e.target.result;
+        const cleanedEmail = fileData.trim(); // Remove leading/trailing whitespace
+        const isValidEmail = isEmail(cleanedEmail);
+        
+        if (isValidEmail) {
+          console.log('Valid email address');
+          setEmailFromResume(cleanedEmail); // Set the valid email address in state
+        } else {
+          console.log('Invalid email address');
+          setEmailFromResume(''); // Clear the email state if invalid
+          console.log(cleanedEmail)
 
-        // Parse the file data and extract the email address
-        const extractedEmail = parseFileData(fileData);
-
-        // If an email address is found, set it in state
-        if (extractedEmail) {
-          setEmailFromResume(extractedEmail);
         }
-      };
 
+      };
+  
       reader.readAsText(selectedFile);
     }
   };
+  
+  
+
+
 
   const handleAnswerChange = (questionId, answer) => {
     setAnswers({ ...answers, [questionId]: answer });
   };
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -100,6 +104,9 @@ function ApplicationQuestions() {
         console.error("Error uploading file:", error);
       });
   };
+
+
+
 
   return (
     <BaseBackground>
