@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
 import MultipleChoiceQuestions from "./MultipleChoiceQuestions";
-import { isEmail } from 'validator';
+// import { isEmail } from 'validator';
 
 
 function ApplicationQuestions() {
@@ -44,34 +44,30 @@ function ApplicationQuestions() {
 
 
 
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
+  const handleFileUpload = (event) => {
+    const selectedFiles = event.target.files;
   
-    if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        
-        const fileData = e.target.result;
-        const cleanedEmail = fileData.trim(); // Remove leading/trailing whitespace
-        const isValidEmail = isEmail(cleanedEmail);
-        
-        if (isValidEmail) {
-          console.log('Valid email address');
-          setEmailFromResume(cleanedEmail); // Set the valid email address in state
-        } else {
-          console.log('Invalid email address');
-          setEmailFromResume(''); // Clear the email state if invalid
-          console.log(cleanedEmail)
-
-        }
-
-      };
-  
-      reader.readAsText(selectedFile);
+    if (selectedFiles.length === 0) {
+      console.log("No files selected.");
+      return;
     }
+  
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const fileContent = e.target.result.toString(); // Convert to string
+      const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+      const emailMatches = fileContent.match(emailRegex);
+  
+      if (emailMatches) {
+        const emails = emailMatches.join(", ");
+        setEmailFromResume(emails);
+      }
+    };
+  
+    reader.readAsText(selectedFiles[0]); // Use readAsText to ensure it's treated as text
   };
+  
+  
   
   
 
@@ -83,9 +79,13 @@ function ApplicationQuestions() {
 
 
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!file) {
+      console.error("No file selected for submission");
+      return;
+    }
 
     // Create a FormData object to send the file
     const formData = new FormData();
@@ -107,7 +107,6 @@ function ApplicationQuestions() {
 
 
 
-
   return (
     <BaseBackground>
       <Background>
@@ -120,7 +119,7 @@ function ApplicationQuestions() {
             <input
               type="file"
               id="fileInput"
-              onChange={handleFileChange}
+              onChange={handleFileUpload}
             />
           </div>
 
