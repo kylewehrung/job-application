@@ -6,15 +6,15 @@ import { useHistory } from "react-router-dom";
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
 import MultipleChoiceQuestions from "./MultipleChoiceQuestions";
-// import { isEmail } from 'validator';
+
 
 
 function ApplicationQuestions() {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [questionId, setQuestionId] = useState(null);
-  const [file, setFile] = useState(null); // State to manage file uploads
-  const [emailFromResume, setEmailFromResume] = useState(""); // State to store email 
+  const [file, setFile] = useState(null); 
+  const [emailFromResume, setEmailFromResume] = useState(""); 
   const history = useHistory();
   const { user } = useUser();
 
@@ -43,29 +43,54 @@ function ApplicationQuestions() {
 
 
 
-
-  const handleFileUpload = (event) => {
-    const selectedFiles = event.target.files;
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileReader = new FileReader();
   
-    if (selectedFiles.length === 0) {
-      console.log("No files selected.");
-      return;
+      fileReader.onload = async () => {
+        const pdfData = fileReader.result;
+        const textContent = await extractTextFromPDF(pdfData);
+  
+        // Text content of the PDF
+        const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+        const emailMatches = textContent.match(emailRegex);
+  
+        if (emailMatches) {
+          const emails = emailMatches.join(", "); // Join all found emails
+          console.log("Extracted emails:", emails); // Log the extracted emails
+          setAnswers({ ...answers, [questionId]: emails });
+  
+          // If the current question ID is 2, set the email in the input. not working, needs work.
+          if (questionId === 2) {
+            setEmailFromResume(emails);
+          }
+        }
+      };
+  
+      fileReader.readAsArrayBuffer(file);
+    }
+  };
+  
+  
+  const extractTextFromPDF = async (pdfData) => {
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  
+    const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+    const numPages = pdf.numPages;
+    let pdfText = "";
+  
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map((item) => item.str).join(" ");
+      pdfText += pageText + "\n";
     }
   
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const fileContent = e.target.result.toString(); // Convert to string
-      const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
-      const emailMatches = fileContent.match(emailRegex);
-  
-      if (emailMatches) {
-        const emails = emailMatches.join(", ");
-        setEmailFromResume(emails);
-      }
-    };
-  
-    reader.readAsText(selectedFiles[0]); // Use readAsText to ensure it's treated as text
+    return pdfText;
   };
+  
   
   
   
@@ -117,10 +142,10 @@ function ApplicationQuestions() {
               Upload Resume
             </label>
             <input
-              type="file"
-              id="fileInput"
-              onChange={handleFileUpload}
-            />
+            type="file"
+            id="fileInput"
+            onChange={(e) => handleFileUpload(e)}
+          />
           </div>
 
 
