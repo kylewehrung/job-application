@@ -15,6 +15,7 @@ function ApplicationQuestions() {
   const [questionId, setQuestionId] = useState(null);
   const [file, setFile] = useState(null); 
   const [emailFromResume, setEmailFromResume] = useState(""); 
+  const [phoneFromResume, setPhoneFromResume] = useState("");
   const history = useHistory();
   const { user } = useUser();
 
@@ -54,23 +55,33 @@ function ApplicationQuestions() {
   
         // Text content of the PDF
         const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+        const phoneRegex = /(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)[-?\.\s]??\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})/g;
+  
         const emailMatches = textContent.match(emailRegex);
+        const phoneMatches = textContent.match(phoneRegex);
   
         if (emailMatches) {
           const emails = emailMatches.join(", "); // Join all found emails
-          console.log("Extracted emails:", emails); // Log the extracted emails
-          setAnswers({ ...answers, [questionId]: emails });
+          console.log("Extracted emails:", emails); 
+          setEmailFromResume(emails);
+          // Set the questionId for the email field
+          setQuestionId(2);
+        }
   
-          // If the current question ID is 2, set the email in the input. not working, needs work.
-          if (questionId === 2) {
-            setEmailFromResume(emails);
-          }
+        if (phoneMatches) {
+          const phones = phoneMatches.join(", "); // Join all found phone numbers
+          console.log("Extracted phone numbers:", phones); 
+          setPhoneFromResume(phones);
+          // Set the questionId for the phone number field
+          setQuestionId(3);
         }
       };
   
       fileReader.readAsArrayBuffer(file);
     }
   };
+  
+  
   
   
   const extractTextFromPDF = async (pdfData) => {
@@ -156,23 +167,24 @@ function ApplicationQuestions() {
                 <StyledParagraph>{question.open_ended_questions}</StyledParagraph> 
               
                 <Input
-                  type="text"
-                  placeholder={
-                    question.id < 8
-                      ? `Enter Your ${question.open_ended_questions}`
-                      : "Enter Your Answer"
-                  }
-
-                  value={
-                    question.id === 2 
+                type="text"
+                placeholder={
+                  question.id < 8
+                    ? `Enter Your ${question.open_ended_questions}`
+                    : "Enter Your Answer"
+                }
+                value={
+                  question.id === 2
                     ? emailFromResume
-                    : answers[question.id] || ""}
-
-                  onChange={(e) => {
-                    handleAnswerChange(question.id, e.target.value);
-                    setQuestionId(question.id);
-                  }}
-                />
+                    : question.id === 3
+                    ? phoneFromResume
+                    : answers[question.id] || ""
+                }
+                onChange={(e) => {
+                  handleAnswerChange(question.id, e.target.value);
+                  setQuestionId(question.id);
+                }}
+              />
               </Column>
             ))}
           <div>
