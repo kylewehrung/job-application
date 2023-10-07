@@ -130,17 +130,6 @@ const StyledLabel = styled.label`
 `;
 
 
-// const StyledInput = styled.input`
-//   width: 500px;
-//   height: 40px; 
-//   padding: 20px;
-//   border-radius: 25px;
-//   font-size: 24px;
-//   opacity: 0.8;
-// `;
-
-
-
 const Error = styled.div`
   color: red;
 `;

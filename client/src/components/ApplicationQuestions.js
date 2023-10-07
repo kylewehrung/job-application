@@ -16,8 +16,13 @@ function ApplicationQuestions() {
   const [file, setFile] = useState(null); 
   const [emailFromResume, setEmailFromResume] = useState(""); 
   const [phoneFromResume, setPhoneFromResume] = useState("");
+  const [resumeParsingSuccessful, setResumeParsingSuccessful] = useState(false);
+  const [emailInputValue, setEmailInputValue] = useState(emailFromResume || '');
+  const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || '');
+
   const history = useHistory();
   const { user } = useUser();
+
 
   const handleYesNoChange = (questionId, option) => {
     setAnswers({ ...answers, [questionId]: option });
@@ -44,6 +49,10 @@ function ApplicationQuestions() {
 
 
 
+  
+
+  
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -53,37 +62,19 @@ function ApplicationQuestions() {
         const pdfData = fileReader.result;
         const textContent = await extractTextFromPDF(pdfData);
   
-        // Text content of the PDF
-        const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
-        const phoneRegex = /(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)[-?\.\s]??\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})/g;
+        // Extract email and phone information and update state
+        handleEmailExtraction(textContent);
+        handlePhoneExtraction(textContent);
   
-        const emailMatches = textContent.match(emailRegex);
-        const phoneMatches = textContent.match(phoneRegex);
-  
-        if (emailMatches) {
-          const emails = emailMatches.join(", "); // Join all found emails
-          console.log("Extracted emails:", emails); 
-          setEmailFromResume(emails);
-          // Set the questionId for the email field
-          setQuestionId(2);
-        }
-  
-        if (phoneMatches) {
-          const phones = phoneMatches.join(", "); // Join all found phone numbers
-          console.log("Extracted phone numbers:", phones); 
-          setPhoneFromResume(phones);
-          // Set the questionId for the phone number field
-          setQuestionId(3);
-        }
+        // Update the file state here
+        setFile(file);
       };
   
       fileReader.readAsArrayBuffer(file);
     }
   };
   
-  
-  
-  
+  // Extract text from a PDF 
   const extractTextFromPDF = async (pdfData) => {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -102,11 +93,58 @@ function ApplicationQuestions() {
     return pdfText;
   };
   
+  // Helper function to extract emails using regex
+  const extractEmails = (textContent) => {
+    const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+    return textContent.match(emailRegex);
+  };
   
+  // Helper function to extract phone numbers using regex
+  const extractPhones = (textContent) => {
+    const phoneRegex = /(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)[-?\.\s]??\d{3}[-\.\s]??\d{4}|\d{3}[-\.\s]??\d{4})/g;
+    return textContent.match(phoneRegex);
+  };
   
+  // Handle email extraction and update state function
+  const handleEmailExtraction = (textContent) => {
+    const emailMatches = extractEmails(textContent);
+    if (emailMatches) {
+      const emails = emailMatches.join(", ");
+      console.log("Extracted emails:", emails);
+      setEmailFromResume(emails);
+      setQuestionId(2);
+      updateAnswers({ emails });
+      setResumeParsingSuccessful(true);
+      setEmailInputValue(emails);
+    }
+  };
   
+  // Handle phone extraction and update state function
+  const handlePhoneExtraction = (textContent) => {
+    const phoneMatches = extractPhones(textContent);
+    if (phoneMatches) {
+      const phones = phoneMatches.join(", ");
+      console.log("Extracted phone numbers:", phones);
+      setPhoneFromResume(phones);
+      setQuestionId(3);
+      updateAnswers({ phones });
+      setResumeParsingSuccessful(true);
+      setPhoneInputValue(phones);
+    }
+  };
+  
+  // Update answers object function
+  const updateAnswers = (newAnswers) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      ...newAnswers,
+    }));
+  };
   
 
+  
+  
+  
 
 
   const handleAnswerChange = (questionId, answer) => {
@@ -115,22 +153,41 @@ function ApplicationQuestions() {
 
 
 
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!file) {
-      console.error("No file selected for submission");
-      return;
-    }
-
-    // Create a FormData object to send the file
+  
+    // Create a FormData object to send the file and answers as JSON
     const formData = new FormData();
-    formData.append("file", file);
-
-    // Add form data to the formData object here in the future:
-
+  
+    if (file) {
+      formData.append("file", file);
+    }
+  
+    // Convert answers to JSON string
+    const answersJSON = JSON.stringify(answers);
+  
+    try {
+      JSON.parse(answersJSON); // Attempt to parse the JSON
+    } catch (error) {
+      console.error('Invalid JSON in answers:', error.message);
+      return; // Don't proceed with the request if JSON is invalid
+    }
+  
+    if (questionId === 2) {
+      answers[2] = emailInputValue;
+    } else if (questionId === 3) {
+      answers[3] = phoneInputValue;
+    }
+  
+    formData.append("answers", JSON.stringify(answers));
+  
     fetch(`/application_questions/${questionId}/submit_answer`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set the Content-Type header to JSON
+      },
       body: formData,
     })
       .then((response) => {
@@ -140,6 +197,11 @@ function ApplicationQuestions() {
         console.error("Error uploading file:", error);
       });
   };
+    
+  
+  
+  
+  
 
 
 
@@ -165,26 +227,31 @@ function ApplicationQuestions() {
             .map((question) => (
               <Column key={question.id}>
                 <StyledParagraph>{question.open_ended_questions}</StyledParagraph> 
-              
                 <Input
-                type="text"
-                placeholder={
-                  question.id < 8
-                    ? `Enter Your ${question.open_ended_questions}`
-                    : "Enter Your Answer"
-                }
-                value={
-                  question.id === 2
-                    ? emailFromResume
-                    : question.id === 3
-                    ? phoneFromResume
-                    : answers[question.id] || ""
-                }
-                onChange={(e) => {
-                  handleAnswerChange(question.id, e.target.value);
-                  setQuestionId(question.id);
-                }}
-              />
+                  type="text"
+                  placeholder={
+                    question.id < 8
+                      ? `Enter Your ${question.open_ended_questions}`
+                      : "Enter Your Answer"
+                  }
+                  value={
+                    question.id === 2
+                      ? emailInputValue
+                      : question.id === 3
+                      ? phoneInputValue
+                      : answers[question.id] || ""
+                  }
+                  onChange={(e) => {
+                    if (question.id === 2) {
+                      setEmailInputValue(e.target.value);
+                    } else if (question.id === 3) {
+                      setPhoneInputValue(e.target.value);
+                    }
+                    handleAnswerChange(question.id, e.target.value);
+                    setQuestionId(question.id);
+                  }}
+                />
+
               </Column>
             ))}
           <div>
@@ -203,6 +270,10 @@ function ApplicationQuestions() {
     </BaseBackground>
   );
 }
+
+
+
+
 
 const BaseBackground = styled.div`
   display: flex;
