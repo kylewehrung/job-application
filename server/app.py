@@ -137,18 +137,23 @@ api.add_resource(ApplicationQuestionListResource, '/questions')
 
 class SubmitAnswer(Resource):
     def post(self, question_id):
-        data = request.get_json()
-        
-        # Assuming data contains the user's answer
+        try:
+            data = request.get_json()
 
-        # Create a new Answer record in the database and associate it with the question
-        answer = Answer(question_id=question_id, answer=data['answer'])  # Use 'answer' key
-        db.session.add(answer)
-        db.session.commit()
+            # Ensure that the 'answer' key exists in the request data
+            if 'answer' not in data:
+                return make_response({"error": "Answer not provided"}, 400)
 
-        return make_response({"message": "Answer submitted successfully"}, 201)
+            # Create a new Answer record in the database and associate it with the question
+            answer = Answer(question_id=question_id, answer=data['answer'])
+            db.session.add(answer)
+            db.session.commit()
 
-
+            return make_response({"message": "Answer submitted successfully"}, 201)
+        except Exception as e:
+            # Log the error
+            print("Error:", str(e))
+            return make_response({"error": "Internal server error"}, 500)
 
 api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_answer")
 
@@ -158,10 +163,9 @@ api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_
 
 
 
+
 class UserAllAnswers(Resource):
     def get(self):
-        # You need a way to identify the user (e.g., by user ID or username)
-        # Assuming you have a way to identify the user, you can retrieve all their answers here
         user_id = 1  # Replace with the actual user ID
         user = User.query.get(user_id)
         if user:
