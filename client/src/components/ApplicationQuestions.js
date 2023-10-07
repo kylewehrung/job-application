@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from "./styles/Input";
 import Button from "./styles/Button";
+import TextArea from "./styles/TextArea";
 import { useHistory } from "react-router-dom";
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
@@ -253,7 +254,15 @@ function ApplicationQuestions() {
                 />
 
               </Column>
+
             ))}
+            <Column>
+            <StyledParagraph>Add a cover letter or anything else you'd like to say about yourself</StyledParagraph>
+            <TextArea 
+                  placeholder="Enter Your Answer"
+  
+                />
+            </Column>
           <div>
             <YesNoQuestions
               questions={questions}
