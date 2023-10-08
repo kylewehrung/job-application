@@ -209,75 +209,89 @@ function ApplicationQuestions() {
   return (
     <BaseBackground>
       <Background>
-        <Content>
-          {/* Single file upload input */}
-          <div className="mb-3">
-            <label htmlFor="fileInput" className="form-label">
-              Upload Resume
-            </label>
-            <input
-            type="file"
-            id="fileInput"
-            onChange={(e) => handleFileUpload(e)}
-          />
-          </div>
+      <Content>
+        {/* Single file upload input */}
+        <div className="mb-3">
+          <label htmlFor="fileInput" className="form-label">
+            Upload Resume
+          </label>
+          <input
+          type="file"
+          id="fileInput"
+          onChange={(e) => handleFileUpload(e)}
+        />
+        </div>
 
-
-          {questions
-            .filter((question) => question.open_ended_questions)
-            .map((question) => (
-              <Column key={question.id}>
-                <StyledParagraph>{question.open_ended_questions}</StyledParagraph> 
-                <Input
-                  type="text"
-                  placeholder={
-                    question.id < 8
-                      ? `Enter Your ${question.open_ended_questions}`
-                      : "Enter Your Answer"
-                  }
-                  value={
-                    question.id === 2
-                      ? emailInputValue
-                      : question.id === 3
-                      ? phoneInputValue
-                      : answers[question.id] || ""
-                  }
-                  onChange={(e) => {
-                    if (question.id === 2) {
-                      setEmailInputValue(e.target.value);
-                    } else if (question.id === 3) {
-                      setPhoneInputValue(e.target.value);
+          <Column>
+        {questions
+          .filter((question) => question.open_ended_questions)
+          .map((question) => (
+            <div key={question.id}>
+              {question.id !== 9 ? (
+                <>
+                  <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
+                  <Input
+                    type="text"
+                    placeholder={
+                      question.id < 8
+                        ? `Enter Your ${question.open_ended_questions}`
+                        : "Enter Your Answer"
                     }
-                    handleAnswerChange(question.id, e.target.value);
-                    setQuestionId(question.id);
-                  }}
-                />
+                    value={
+                      question.id === 2
+                        ? emailInputValue
+                        : question.id === 3
+                        ? phoneInputValue
+                        : answers[question.id] || ""
+                    }
+                    onChange={(e) => {
+                      if (question.id === 2) {
+                        setEmailInputValue(e.target.value);
+                      } else if (question.id === 3) {
+                        setPhoneInputValue(e.target.value);
+                      }
+                      handleAnswerChange(question.id, e.target.value);
+                      setQuestionId(question.id);
+                    }}
+                  />
+                </>
+              ) : null}
+            </div>
+          ))}
 
-              </Column>
-
-            ))}
-            <Column>
-            <StyledParagraph>Add a cover letter or anything else you'd like to say about yourself</StyledParagraph>
-            <TextArea 
-                  placeholder="Enter Your Answer"
-  
-                />
+        {questions
+          .filter((question) => question.id === 9)
+          .map((question) => (
+            <Column key={question.id}>
+              <StyledParagraph>
+                Add a cover letter or anything else you'd like to say about yourself
+              </StyledParagraph>
+              <TextArea
+                placeholder="Enter Your Answer"
+                onChange={(e) => {
+                  handleAnswerChange(9, e.target.value);
+                  setQuestionId(9);
+                }}
+              />
             </Column>
-          <div>
-            <YesNoQuestions
-              questions={questions}
-              handleYesNoChange={handleYesNoChange}
-            />
-            <MultipleChoiceQuestions
-              questions={questions}
-              handleMultipleChoiceChange={handleMultipleChoiceChange}
-            />
-          </div>
-          <Button onClick={handleSubmit}>Submit Answers</Button>
-        </Content>
-      </Background>
-    </BaseBackground>
-  );
+          ))}
+
+</Column>
+        <div>
+          <YesNoQuestions
+            questions={questions}
+            handleYesNoChange={handleYesNoChange}
+          />
+          <MultipleChoiceQuestions
+            questions={questions}
+            handleMultipleChoiceChange={handleMultipleChoiceChange}
+          />
+        </div>
+        <Button onClick={handleSubmit}>Submit Answers</Button>
+      </Content>
+    </Background>
+  </BaseBackground>
+);
 }
 
 
@@ -314,12 +328,14 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   text-align: left;
 `;
 
 const StyledParagraph = styled.p`
-  margin: 0;
+margin-top: 35px;
+margin-bottom: 5px;
+margin: 1;
 `;
 
 export default ApplicationQuestions;
