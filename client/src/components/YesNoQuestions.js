@@ -13,7 +13,7 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
             <p>{question.yes_no_questions}</p>
             <RadioButtonContainer>
 
-                <CustomInput checkedColor="#007bff"
+                <CustomInput 
                 type="radio"
                 name={`yesNoOption-${question.id}`}
                 value="Yes"
@@ -22,11 +22,13 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
                 }}
               />
 
-              <span>Yes</span>
+              <span>
+              <StyledParagraph>Yes</StyledParagraph>
+              </span>
 
             </RadioButtonContainer>
             <RadioButtonContainer>
-              <CustomInput checkedColor="#007bff"  
+              <CustomInput   
                 type="radio"
                 name={`yesNoOption-${question.id}`}
                 value="No"
@@ -35,7 +37,9 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
                 }}
               />
               
-              <span>No</span>
+              <span>
+                <StyledParagraph>No</StyledParagraph>
+              </span>
             </RadioButtonContainer>
           </Column>
         ))}
@@ -53,28 +57,42 @@ const Column = styled.div`
   background-attachment: fixed;
 `;
 
-const RadioButtonContainer = styled.div`
+const CustomInput = styled.input`
+  display: none; /* Hide the default radio button */
+`;
+
+const RadioButtonContainer = styled.label`
   display: flex;
   align-items: center;
   margin-top: 5px;
   cursor: pointer;
-`;
 
+  /* Style the custom radio button */
+  span {
+    width: 40px;
+    height: 40px;
+    border: 4px solid white;
+    border-radius: 50%;
+    background-color: transparent;
+    margin-right: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out;
+  }
 
-
-const CustomInput = styled.input`
-  width: 40px;
-  height: 40px;
-  border: 4px solid white;
-  border-radius: 50%; 
-  background-color: transparent;
-  margin-right: 5px;
-
-  /* Change the fill color when checked */
-  &:checked + & {
-    background-color: #007bff; /* Change the background color when checked */
+  /* Change the background color of the span when the input is checked */
+  input:checked + span {
+    background-color: white;
   }
 `;
+
+
+const StyledParagraph = styled.p`
+margin-left: 75px;
+margin-bottom: 1px;
+`;
+
 
 
 export default YesNoQuestions;
