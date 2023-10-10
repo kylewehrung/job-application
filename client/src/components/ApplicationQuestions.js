@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Input from "./styles/Input";
 import Button from "./styles/Button";
-import TextArea from "./styles/TextArea";
 import { useHistory } from "react-router-dom";
 import { useUser } from "./context";
 import YesNoQuestions from "./YesNoQuestions";
 import MultipleChoiceQuestions from "./MultipleChoiceQuestions";
+import CoverLetter from "./CoverLetter";
+import OpenEndedQuestions from "./OpenEndedQuestions";
+import FileUpload from "./FileUpload";
 
 
 
@@ -143,8 +144,7 @@ function ApplicationQuestions() {
   };
   
 
-  
-  
+
   
 
 
@@ -204,80 +204,26 @@ function ApplicationQuestions() {
   
   
 
-
-
   return (
     <BaseBackground>
       <Background>
-      <Content>
-        {/* Single file upload input */}
-        <div className="mb-3">
-          <label htmlFor="fileInput" className="form-label">
-            Upload Resume
-          </label>
-          <input
-          type="file"
-          id="fileInput"
-          onChange={(e) => handleFileUpload(e)}
-        />
-        </div>
-
-          <Column>
-        {questions
-          .filter((question) => question.open_ended_questions)
-          .map((question) => (
-            <div key={question.id}>
-              {question.id !== 9 ? (
-                <>
-                  <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
-                  <Input
-                    type="text"
-                    placeholder={
-                      question.id < 8
-                        ? `Enter Your ${question.open_ended_questions}`
-                        : "Enter Your Answer"
-                    }
-                    value={
-                      question.id === 2
-                        ? emailInputValue
-                        : question.id === 3
-                        ? phoneInputValue
-                        : answers[question.id] || ""
-                    }
-                    onChange={(e) => {
-                      if (question.id === 2) {
-                        setEmailInputValue(e.target.value);
-                      } else if (question.id === 3) {
-                        setPhoneInputValue(e.target.value);
-                      }
-                      handleAnswerChange(question.id, e.target.value);
-                      setQuestionId(question.id);
-                    }}
-                  />
-                </>
-              ) : null}
-            </div>
-          ))}
-
-        {questions
-          .filter((question) => question.id === 9)
-          .map((question) => (
-            <Column key={question.id}>
-              <StyledParagraph>
-                Add a cover letter or anything else you'd like to say about yourself
-              </StyledParagraph>
-              <TextArea
-                placeholder="Enter Your Answer"
-                onChange={(e) => {
-                  handleAnswerChange(9, e.target.value);
-                  setQuestionId(9);
-                }}
-              />
-            </Column>
-          ))}
-
-</Column>
-        <div>
+        <Content>
+          {/* Render FileUpload component here */}
+          <FileUpload handleFileUpload={handleFileUpload} />
+          {/* Render OpenEndedQuestions component here */}
+          <OpenEndedQuestions
+            questions={questions}
+            emailInputValue={emailInputValue}
+            phoneInputValue={phoneInputValue}
+            answers={answers}
+            handleAnswerChange={handleAnswerChange}
+          />
+          {/* Render CoverLetter component here */}
+          <CoverLetter
+            questions={questions}
+            handleAnswerChange={handleAnswerChange}
+          />
+          {/* Render YesNoQuestions and MultipleChoiceQuestions components here */}
           <YesNoQuestions
             questions={questions}
             handleYesNoChange={handleYesNoChange}
@@ -286,14 +232,14 @@ function ApplicationQuestions() {
             questions={questions}
             handleMultipleChoiceChange={handleMultipleChoiceChange}
           />
-        </div>
-        <Button onClick={handleSubmit}>Submit Answers</Button>
-      </Content>
-    </Background>
-  </BaseBackground>
-);
-}
+          {/* Render Submit button here */}
+          <Button onClick={handleSubmit}>Submit Answers</Button>
+        </Content>
+      </Background>
+    </BaseBackground>
+  );
 
+}
 
 
 
@@ -324,19 +270,7 @@ const Content = styled.div`
   align-items: center;
 `;
 
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-bottom: 30px;
-  text-align: left;
-`;
 
-const StyledParagraph = styled.p`
-margin-top: 35px;
-margin-bottom: 5px;
-margin: 1;
-`;
 
 export default ApplicationQuestions;
 
