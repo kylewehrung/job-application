@@ -48,6 +48,8 @@ const Column = styled.div`
   flex-direction: column;
   align-items: left;
   margin-bottom: 10px;
+  margin-left: -55px;
+  margin-top: 15px;
   background-attachment: fixed;
 `;
 

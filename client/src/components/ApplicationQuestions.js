@@ -214,7 +214,9 @@ function ApplicationQuestions() {
           <OpenEndedQuestions
             questions={questions}
             emailInputValue={emailInputValue}
+            setEmailInputValue={setEmailInputValue}
             phoneInputValue={phoneInputValue}
+            setPhoneInputValue={setPhoneInputValue}
             answers={answers}
             handleAnswerChange={handleAnswerChange}
           />

@@ -35,6 +35,7 @@ const Column = styled.div`
   flex-direction: column;
   align-items: left;
   margin-bottom: 30px;
+  margin-top: -25px;
   text-align: left;
 `;
 

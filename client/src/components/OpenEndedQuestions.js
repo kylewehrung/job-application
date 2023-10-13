@@ -6,10 +6,14 @@ import Input from "./styles/Input";
 function OpenEndedQuestions({
     questions,
     emailInputValue,
+    setEmailInputValue,
+    setPhoneInputValue,
     phoneInputValue,
     answers,
     handleAnswerChange,
   }) {
+
+    
     return (
       <Column>
         {questions
@@ -35,9 +39,9 @@ function OpenEndedQuestions({
                     }
                     onChange={(e) => {
                       if (question.id === 2) {
-                        // Handle email input change
+                        setEmailInputValue(e.target.value);
                       } else if (question.id === 3) {
-                        // Handle phone input change
+                        setPhoneInputValue(e.target.value);
                       }
                       handleAnswerChange(question.id, e.target.value);
                     }}
