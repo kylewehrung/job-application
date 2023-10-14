@@ -192,35 +192,62 @@ const extractPhones = (pdfText) => {
 
 
   
-// Initialize state with data from local storage and restore email and phone input values
+// The first useEffect initializes the state with data from local storage and restores email and phone input values
 useEffect(() => {
+  // Retrieve stored answers from local storage
   const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
 
   setAnswers(storedAnswers);
+
   setEmailInputValue(storedAnswers[2] || '');
   setPhoneInputValue(storedAnswers[3] || '');
+
+  // Save the modified answers 
+  localStorage.setItem('answers', JSON.stringify(storedAnswers));
 }, []);
 
-// Save answers, including email and phone, to local storage whenever they change
+
+// The second useEffect is responsible for saving answers, including email and phone, to local storage whenever they change
 useEffect(() => {
-  const modifiedAnswers = { ...answers, 2: emailInputValue, 3: phoneInputValue };
+  // Create a modified copy of 'answers' to include the current email and phone values
+  const modifiedAnswers = { ...answers };
+
+  // Update email and phone value
+  modifiedAnswers[2] = emailInputValue; 
+  modifiedAnswers[3] = phoneInputValue; 
+
+  // Save all answers, including email and phone, to local storage whenever they change
   localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
 }, [answers, emailInputValue, phoneInputValue]);
 
-// Save the state to local storage before leaving the page
+// The third useEffect is for saving the state to local storage before leaving the page
 useEffect(() => {
-  const beforeUnloadHandler = (event) => {
-    const modifiedAnswers = { ...answers, 2: emailInputValue, 3: phoneInputValue };
+  // Add a beforeunload event listener to handle saving data before leaving the page
+  window.addEventListener('beforeunload', (event) => {
+    const modifiedAnswers = { ...answers };
+
+    // Update email and phone value
+    modifiedAnswers[2] = emailInputValue; 
+    modifiedAnswers[3] = phoneInputValue; 
+
+    // Save all answers, including email and phone
     localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
-  };
+  });
 
-  window.addEventListener('beforeunload', beforeUnloadHandler);
-
+  // Remove the event listener when the component is unmounted to avoid memory leaks
   return () => {
-    window.removeEventListener('beforeunload', beforeUnloadHandler);
+    window.removeEventListener('beforeunload', (event) => {
+      const modifiedAnswers = { ...answers };
+
+       // Update email and phone value
+      modifiedAnswers[2] = emailInputValue;
+      modifiedAnswers[3] = phoneInputValue; 
+
+      // Save all answers, including email and phone, to local storage before unloading the page
+      localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
+    });
   };
 }, []);
-
 
 
 
