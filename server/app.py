@@ -76,6 +76,25 @@ api.add_resource(Login, "/login")
 
 
 
+class Logout(Resource):
+    def delete(self):
+        if session.get("user_id"):
+            session["user_id"] = None
+            # If the user is authenticated, clear the stored user ID in the session
+
+            return {}, 204
+            # Return an empty response with HTTP status code 204 (No Content)
+        
+        return {"error": "401 Unauthorized"}, 401
+        # If the user is not authenticated, return an error message with HTTP status code 401 (Unauthorized)
+
+api.add_resource(Logout, "/logout")
+# Add the Logout resource to the API with the specified URL endpoint
+
+
+
+
+
 class CheckSession(Resource):
     def get(self):
         try:
@@ -140,12 +159,12 @@ class SubmitAnswer(Resource):
         try:
             data = request.get_json()
 
-            # Ensure that the 'answer' key exists in the request data
-            if 'answer' not in data:
-                return make_response({"error": "Answer not provided"}, 400)
+            # Ensure that the 'answers' key exists in the request data
+            if 'answers' not in data:
+                return make_response({"error": "Answers not provided"}, 400)
 
             # Create a new Answer record in the database and associate it with the question
-            answer = Answer(question_id=question_id, answer=data['answer'])
+            answer = Answer(question_id=question_id, answer=data['answers'])
             db.session.add(answer)
             db.session.commit()
 
@@ -155,7 +174,8 @@ class SubmitAnswer(Resource):
             print("Error:", str(e))
             return make_response({"error": "Internal server error"}, 500)
 
-api.add_resource(SubmitAnswer, "/application_questions/<int:question_id>/submit_answer")
+
+api.add_resource(SubmitAnswer, "/<int:question_id>/submit_answer")
 
 
 

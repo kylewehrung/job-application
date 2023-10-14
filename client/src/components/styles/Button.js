@@ -9,6 +9,10 @@ const COLORS = {
     "--main": "rgba(255, 255, 255, 0.65)",
     "--accent": "black",
   },
+  third: {
+    "--main": "#f8f0e3",
+    "--accent": "black",
+  },
 };
 
 

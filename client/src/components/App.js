@@ -5,6 +5,7 @@ import Login from "./Login";
 import styled from "styled-components";
 import ApplicationQuestions from "./ApplicationQuestions";
 import UserAnswers from "./UserAnswers";
+import NavBar from "./NavBar";
 
 
 
@@ -22,7 +23,7 @@ function App() {
 
   const handleLogin = (user) => {
     setUser(user);
-    history.push("/application_questions");
+    history.push("/");
   };
 
   if (!user) return <Login handleLogin={handleLogin} />;
@@ -30,15 +31,17 @@ function App() {
   return (
     <AppWrapper>
     <UserContext.Provider value={{ user, setUser }}>
+    <NavBar user={user} setUser={setUser} />
      <Switch>
-
-      <Route path="/application_questions">
-        <ApplicationQuestions/>
-      </Route>
-    
+     
       <Route path="/user_answers/:userId" >
       <UserAnswers userEmail={user.email} />
       </Route>
+
+      <Route path="/">
+        <ApplicationQuestions/>
+      </Route>
+    
 
      </Switch>
       </UserContext.Provider>
