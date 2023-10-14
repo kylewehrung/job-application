@@ -70,14 +70,12 @@ function ApplicationQuestions() {
   
         if (email) {
           setEmailFromResume(email.join(", "));
-          // setQuestionId(2);
           updateAnswers({ 2: email.join(", ") }); // Set the answer for question 2
           setEmailInputValue(email.join(", "));
         }
   
         if (phone) {
           setPhoneFromResume(phone.join(", "));
-          // setQuestionId(3);
           updateAnswers({ 3: phone.join(", ") }); // Set the answer for question 3
           setPhoneInputValue(phone.join(", "));
         }
@@ -167,47 +165,57 @@ const handlePhoneExtraction = (textContent) => {
 
 
 
+
+// The first useEffect initializes the state with data from local storage and restores email and phone input values
 useEffect(() => {
+  // Retrieve stored answers from local storage or an empty object if nothing is found
   const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
+
   setAnswers(storedAnswers);
 
-  // Restore all input values from stored answers
-  setEmailInputValue(storedAnswers[2] || ''); // Use an empty string as the default value
-  setPhoneInputValue(storedAnswers[3] || ''); // Use an empty string as the default value
+  setEmailInputValue(storedAnswers[2] || '');
+  setPhoneInputValue(storedAnswers[3] || '');
 
-  // Clear local storage
-  localStorage.clear();
-
-  // Save the modified answers back to local storage
+  // Save the modified answers 
   localStorage.setItem('answers', JSON.stringify(storedAnswers));
 }, []);
 
 
+// The second useEffect is responsible for saving answers, including email and phone, to local storage whenever they change
 useEffect(() => {
+  // Create a modified copy of 'answers' to include the current email and phone values
   const modifiedAnswers = { ...answers };
+  modifiedAnswers[2] = emailInputValue; // Update email value
+  modifiedAnswers[3] = phoneInputValue; // Update phone value
 
-  // Update email and phone values
-  modifiedAnswers[2] = emailInputValue;
-  modifiedAnswers[3] = phoneInputValue;
-
-  // Save all answers, including email and phone, to local storage
+  // Save all answers, including email and phone, to local storage whenever they change
   localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
 }, [answers, emailInputValue, phoneInputValue]);
 
-// Save to local storage before leaving the page
+// The third useEffect is for saving the state to local storage before leaving the page
 useEffect(() => {
+  // Add a beforeunload event listener to handle saving data before leaving the page
   window.addEventListener('beforeunload', (event) => {
     const modifiedAnswers = { ...answers };
-    modifiedAnswers[2] = emailInputValue;
-    modifiedAnswers[3] = phoneInputValue;
+
+    // Update email and phone value
+    modifiedAnswers[2] = emailInputValue; 
+    modifiedAnswers[3] = phoneInputValue; 
+
+    // Save all answers, including email and phone
     localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
   });
 
+  // Remove the event listener when the component is unmounted to avoid memory leaks
   return () => {
     window.removeEventListener('beforeunload', (event) => {
       const modifiedAnswers = { ...answers };
+
+       // Update email and phone value
       modifiedAnswers[2] = emailInputValue;
-      modifiedAnswers[3] = phoneInputValue;
+      modifiedAnswers[3] = phoneInputValue; 
+
+      // Save all answers, including email and phone, to local storage before unloading the page
       localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
     });
   };
@@ -216,11 +224,8 @@ useEffect(() => {
 
 
 
+
   
-
-
-
-
 
 
 
@@ -236,36 +241,8 @@ useEffect(() => {
   };
   
 
-
-  // useEffect(() => {
-  //   setEmailInputValue(emailFromResume);
-  // }, [emailFromResume]);
-  
-  // useEffect(() => {
-  //   setPhoneInputValue(phoneFromResume);
-  // }, [phoneFromResume]);
-
-
-
-  // useEffect(() => {
-  //   const handleStorageChange = (e) => {
-  //     if (e.key === 'answers') {
-  //       setAnswers(JSON.parse(e.newValue));
-  //     }
-  //   };
-  
-  //   window.addEventListener('storage', handleStorageChange);
-  
-  //   // Clean up the event listener when the component is unmounted
-  //   return () => {
-  //     window.removeEventListener('storage', handleStorageChange);
-  //   };
-  // }, []);
   
   
-
-
-
 
 
 const handleSubmit = (e) => {
@@ -326,7 +303,6 @@ const handleSubmit = (e) => {
           <FileUpload handleFileUpload={handleFileUpload} />
           {/* Render OpenEndedQuestions component here */}
           <OpenEndedQuestions
-            // key={`${emailInputValue}-${phoneInputValue}`}
             questions={questions}
             emailInputValue={emailInputValue}
             setEmailInputValue={setEmailInputValue}
@@ -338,6 +314,7 @@ const handleSubmit = (e) => {
           {/* Render CoverLetter component here */}
           <CoverLetter
             questions={questions}
+            answers={answers}
             handleAnswerChange={handleAnswerChange}
           />
           {/* Render YesNoQuestions and MultipleChoiceQuestions components here */}

@@ -5,6 +5,7 @@ import TextArea from "./styles/TextArea";
 
 function CoverLetter({
     questions,
+    answers,
     handleAnswerChange,
 }) {
     return (
@@ -18,6 +19,7 @@ function CoverLetter({
             </StyledParagraph>
             <TextArea
               placeholder="Enter Your Answer"
+              value={answers[question.id] || ""}
               onChange={(e) => {
                 handleAnswerChange(9, e.target.value);
               }}
