@@ -21,14 +21,44 @@ function ApplicationQuestions() {
   const [resumeParsingSuccessful, setResumeParsingSuccessful] = useState(false);
   const [emailInputValue, setEmailInputValue] = useState(emailFromResume || '');
   const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || '');
-
   const history = useHistory();
   const { user } = useUser();
 
 
-  const handleYesNoChange = (questionId, option) => {
-    setAnswers({ ...answers, [questionId]: option });
-  };
+
+
+// Load "Yes/No" answers into state
+useEffect(() => {
+  const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
+  setAnswers(storedAnswers);
+
+  console.log("Initial 'answers' state when loading from local storage:", storedAnswers);
+
+  // Load answers for "Yes/No" questions into state
+  if (storedAnswers[10]) {
+    handleYesNoChange(10, storedAnswers[10]);
+  }
+  if (storedAnswers[11]) {
+    handleYesNoChange(11, storedAnswers[11]);
+  }
+}, []);
+
+
+const handleYesNoChange = (questionId, answer) => {
+  const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
+
+  const updatedAnswers = { ...storedAnswers, [questionId]: answer };
+  localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+
+  // Update the state with the new answer
+  setAnswers(updatedAnswers);
+};
+
+
+
+
+
+
 
   const handleMultipleChoiceChange = (questionId, option) => {
     setAnswers({ ...answers, [questionId]: option });
@@ -320,6 +350,7 @@ const handleSubmit = (e) => {
           {/* Render YesNoQuestions and MultipleChoiceQuestions components here */}
           <YesNoQuestions
             questions={questions}
+            answers={answers}
             handleYesNoChange={handleYesNoChange}
           />
           <MultipleChoiceQuestions
