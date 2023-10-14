@@ -169,43 +169,51 @@ const handlePhoneExtraction = (textContent) => {
 
 useEffect(() => {
   const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
+  setAnswers(storedAnswers);
 
-  // Initialize email and phone values
-  setEmailInputValue(storedAnswers[2] || '');
-  setPhoneInputValue(storedAnswers[3] || '');
+  // Restore all input values from stored answers
+  setEmailInputValue(storedAnswers[2] || ''); // Use an empty string as the default value
+  setPhoneInputValue(storedAnswers[3] || ''); // Use an empty string as the default value
 
-  // Initialize other answers
-  for (const questionId in questions) {
-    if (storedAnswers[questionId]) {
-      handleAnswerChange(questionId, storedAnswers[questionId]);
-    }
-  }
+  // Clear local storage
+  localStorage.clear();
+
+  // Save the modified answers back to local storage
+  localStorage.setItem('answers', JSON.stringify(storedAnswers));
 }, []);
 
-const saveToLocalStorage = () => {
-  const modifiedAnswers = { ...answers };
-  
-  // Add email and phone values if they exist
-  if (emailInputValue) {
-    modifiedAnswers[2] = emailInputValue;
-  }
-  if (phoneInputValue) {
-    modifiedAnswers[3] = phoneInputValue;
-  }
-  
-  // Save the modified answers (including email and phone) to local storage
-  localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
-};
 
+useEffect(() => {
+  const modifiedAnswers = { ...answers };
+
+  // Update email and phone values
+  modifiedAnswers[2] = emailInputValue;
+  modifiedAnswers[3] = phoneInputValue;
+
+  // Save all answers, including email and phone, to local storage
+  localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
+}, [answers, emailInputValue, phoneInputValue]);
 
 // Save to local storage before leaving the page
 useEffect(() => {
-  window.addEventListener('beforeunload', saveToLocalStorage);
-  
+  window.addEventListener('beforeunload', (event) => {
+    const modifiedAnswers = { ...answers };
+    modifiedAnswers[2] = emailInputValue;
+    modifiedAnswers[3] = phoneInputValue;
+    localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
+  });
+
   return () => {
-    window.removeEventListener('beforeunload', saveToLocalStorage);
+    window.removeEventListener('beforeunload', (event) => {
+      const modifiedAnswers = { ...answers };
+      modifiedAnswers[2] = emailInputValue;
+      modifiedAnswers[3] = phoneInputValue;
+      localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
+    });
   };
 }, []);
+
+
 
 
   
