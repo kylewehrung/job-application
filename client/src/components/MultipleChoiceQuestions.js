@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Label from "./styles/Label";
 
-function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
+function MultipleChoiceQuestions({ questions, answers, handleMultipleChoiceChange }) {
 
 
 
@@ -28,6 +28,7 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
                 onChange={(e) => {
                   handleMultipleChoiceChange(question.id, e.target.value);
                 }}
+                value={answers[question.id] || ''} // Update value to be submitted answer
               >
                 <option value="">-- Please choose an option --</option>
                 {choicesObject.choices.map((choice) => (
@@ -35,7 +36,8 @@ function MultipleChoiceQuestions({ questions, handleMultipleChoiceChange }) {
                     {choice}
                   </option>
                 ))}
-              </select>
+            </select>
+
             </Column>
           );
         })}
@@ -54,6 +56,4 @@ const Column = styled.div`
 `;
 
 export default MultipleChoiceQuestions;
-
-
 
