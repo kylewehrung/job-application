@@ -2,9 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 
+function YesNoQuestions({ questions, answers, handleYesNoChange }) {
 
-function YesNoQuestions({ questions, handleYesNoChange }) {
   return (
+
     <div>
       {questions
         .filter((question) => question.yes_no_questions)
@@ -12,31 +13,25 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
           <Column key={question.id}>
             <p>{question.yes_no_questions}</p>
             <RadioButtonContainer>
-
-                <CustomInput 
+              <CustomInput
                 type="radio"
                 name={`yesNoOption-${question.id}`}
                 value="Yes"
-                onChange={() => {
-                  handleYesNoChange(question.id, "Yes");
-                }}
+                checked={answers[question.id] === "Yes"}
+                onChange={() => handleYesNoChange(question.id, "Yes")}
               />
-
               <span>
-              <StyledParagraph>Yes</StyledParagraph>
+                <StyledParagraph>Yes</StyledParagraph>
               </span>
-
             </RadioButtonContainer>
             <RadioButtonContainer>
-              <CustomInput   
+              <CustomInput
                 type="radio"
                 name={`yesNoOption-${question.id}`}
                 value="No"
-                onChange={() => {
-                  handleYesNoChange(question.id, "No");
-                }}
+                checked={answers[question.id] === "No"}
+                onChange={() => handleYesNoChange(question.id, "No")}
               />
-              
               <span>
                 <StyledParagraph>No</StyledParagraph>
               </span>
@@ -46,6 +41,7 @@ function YesNoQuestions({ questions, handleYesNoChange }) {
     </div>
   );
 }
+
 
 
 
@@ -96,7 +92,4 @@ margin-bottom: 1px;
 
 
 export default YesNoQuestions;
-
-
-
 
