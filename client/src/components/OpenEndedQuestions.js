@@ -61,13 +61,24 @@ function OpenEndedQuestions({
   flex-direction: column;
   align-items: left;
   margin-bottom: 30px;
+  margin-top: 50px;
   text-align: left;
 `;
 
 const StyledParagraph = styled.p`
   margin-top: 35px;
   margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: bold; 
+  font-family: cascadia;
+  color: #333;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
 `;
+
+
+
 
 
 export default OpenEndedQuestions;

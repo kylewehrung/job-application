@@ -11,7 +11,7 @@ function YesNoQuestions({ questions, answers, handleYesNoChange }) {
         .filter((question) => question.yes_no_questions)
         .map((question) => (
           <Column key={question.id}>
-            <p>{question.yes_no_questions}</p>
+            <StyledParagraph>{question.yes_no_questions}</StyledParagraph>
             <RadioButtonContainer>
               <CustomInput
                 type="radio"
@@ -21,7 +21,7 @@ function YesNoQuestions({ questions, answers, handleYesNoChange }) {
                 onChange={() => handleYesNoChange(question.id, "Yes")}
               />
               <span>
-                <StyledParagraph>Yes</StyledParagraph>
+                <StyledYesNo>Yes</StyledYesNo>
               </span>
             </RadioButtonContainer>
             <RadioButtonContainer>
@@ -33,7 +33,7 @@ function YesNoQuestions({ questions, answers, handleYesNoChange }) {
                 onChange={() => handleYesNoChange(question.id, "No")}
               />
               <span>
-                <StyledParagraph>No</StyledParagraph>
+                <StyledYesNo>No</StyledYesNo>
               </span>
             </RadioButtonContainer>
           </Column>
@@ -49,7 +49,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   background-attachment: fixed;
 `;
 
@@ -85,9 +85,20 @@ const RadioButtonContainer = styled.label`
 
 
 const StyledParagraph = styled.p`
-margin-left: 75px;
-margin-bottom: 1px;
+  font-size: 16px;
+  font-weight: bold; 
+  font-family: cascadia;
+
 `;
+
+const StyledYesNo = styled.p`
+  margin-left: 75px;
+  margin-bottom: 1px;
+  font-size: 16px;
+  font-weight: bold; 
+  font-family: cascadia;
+`;
+
 
 
 
