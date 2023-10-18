@@ -28,6 +28,7 @@ function Button({ variant = "fill", color = "primary", ...props }) {
 }
 
 const ButtonBase = styled.button`
+  font-family: cascadia;
   cursor: pointer;
   font-size: 1.25rem;
   border: 1px solid transparent;

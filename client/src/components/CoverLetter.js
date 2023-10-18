@@ -44,6 +44,13 @@ const Column = styled.div`
 const StyledParagraph = styled.p`
   margin-top: 35px;
   margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: bold; 
+  font-family: cascadia;
+  color: #333;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
 `;
 
 

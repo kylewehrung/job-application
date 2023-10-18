@@ -34,24 +34,28 @@ const UserAnswersContainer = styled.div`
 `;
 
 const UserEmail = styled.h1`
+  font-family: cascadia;
   font-size: 40px;
   margin-bottom: 10px;
   color: #333;
 `;
 
 const UserId = styled.h2`
+  font-family: cascadia;
   font-size: 40px;
   color: #007bff;
   margin-bottom: 20px;
 `;
 
 const AnswersHeader = styled.h2`
+  font-family: cascadia;
   font-size: 40px;
   margin-top: 20px;
 `;
 
 const AnswersList = styled.ul`
   list-style-type: none;
+  font-family: cascadia;
   padding: 0;
   margin: 0;
 `;
@@ -61,6 +65,7 @@ const AnswerItem = styled.li`
   margin-bottom: 10px;
   border-left: 4px solid #007bff;
   padding-left: 10px;
+  font-family: cascadia;
 `;
 
 export default UserAnswers;

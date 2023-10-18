@@ -16,11 +16,9 @@ function MultipleChoiceQuestions({ questions, answers, handleMultipleChoiceChang
 
           return (
             <Column key={question.id}>
-              <p>{choicesObject.question}</p>
-              <Label htmlFor={`multipleChoiceSelect-${question.id}`}>
-                Choose an option:
-              </Label>
-
+              <StyledParagraph>{choicesObject.question}</StyledParagraph>
+              <Label htmlFor={`multipleChoiceSelect-${question.id}`}/>
+             
               <select
                 className="form-select form-select-lg mb-3"
                 name={`multipleChoiceSelect-${question.id}`}
@@ -49,11 +47,23 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-bottom: 10px;
   margin-left: -55px;
-  margin-top: 15px;
+  margin-top: 10px;
   background-attachment: fixed;
 `;
+
+const StyledParagraph = styled.p`
+  margin-top: 35px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-weight: bold; 
+  font-family: cascadia;
+  color: #333;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
+`;
+
 
 export default MultipleChoiceQuestions;
 
