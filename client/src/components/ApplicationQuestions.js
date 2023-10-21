@@ -19,11 +19,10 @@ const ApplicationQuestions = () => {
   const [file, setFile] = useState(null);
   const [emailFromResume, setEmailFromResume] = useState("");
   const [phoneFromResume, setPhoneFromResume] = useState("");
-  const [fullNameFromResume, setFullNameFromResume] = useState("");
-  const [fullNameInputValue, setFullNameInputValue] = useState(fullNameFromResume || "");
-  const [resumeParsingSuccessful, setResumeParsingSuccessful] = useState(false);
   const [emailInputValue, setEmailInputValue] = useState(emailFromResume || "");
   const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || "");
+  const [fullNameFromResume, setFullNameFromResume] = useState("");
+  const [fullNameInputValue, setFullNameInputValue] = useState(fullNameFromResume || "");
   const history = useHistory();
   const { user } = useUser();
 
@@ -146,40 +145,39 @@ const ApplicationQuestions = () => {
 
 
 
-
   const handleInfoExtraction = (pdfText) => {
     const emailMatches = extractEmails(pdfText);
     const phoneMatches = extractPhones(pdfText);
-  
-    // Extract full name
     const names = extractNames(pdfText);
   
+    // Object to store all the answers
+    const allAnswers = {};
+  
     if (names) {
-      const fullName = names.join(" "); // Combine first name and last name into full name
-      console.log("Full Name:", fullName);
+      const fullName = names.join(" ");
       setFullNameFromResume(fullName);
-
-      // These next two lines of code responsible for getting the fullName to show up in the input
-      updateAnswers({ 1: fullName});
-      setFullNameInputValue(fullName);
+      allAnswers[1] = fullName; // Update the answer 
+      setFullNameInputValue(fullName); // Update the input value 
     }
   
     if (emailMatches) {
       const emails = emailMatches.join(", ");
       setEmailFromResume(emails);
-      updateAnswers({ 2: emails });
-      setEmailInputValue(emails);
+      allAnswers[2] = emails; 
+      setEmailInputValue(emails); 
     }
   
     if (phoneMatches) {
       const phones = phoneMatches.join(", ");
       setPhoneFromResume(phones);
-      updateAnswers({ 3: phones });
-      setPhoneInputValue(phones);
+      allAnswers[3] = phones; 
+      setPhoneInputValue(phones); 
     }
   
-    setResumeParsingSuccessful(emailMatches || phoneMatches || names); // Added || names
+    // Update the entire answers object with all of the extracted values
+    updateAnswers(allAnswers);
   };
+  
   
 
   // Helper function to extract emails using regex
@@ -206,7 +204,6 @@ const extractNames = (pdfText) => {
     // Extract the first and last names
     const firstName = matches[0];
     const lastName = matches[1];
-    console.log("extractNames helper function:", firstName, lastName);
     return [firstName, lastName];
   }
 
@@ -297,7 +294,6 @@ useEffect(() => {
 const handleSubmit = (e) => {
   e.preventDefault();
 
-  // Access the answers from the state variable 'answers' and send them to the server.
   // Create a FormData object to send the file and answers as JSON
   const formData = new FormData();
 
