@@ -4,6 +4,7 @@ const Input = styled.textarea`
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: cascadia;
   width: 735px;
   height: 160px; 
   rows: 4;
