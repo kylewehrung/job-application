@@ -19,15 +19,14 @@ const ApplicationQuestions = () => {
   const [file, setFile] = useState(null);
   const [emailFromResume, setEmailFromResume] = useState("");
   const [phoneFromResume, setPhoneFromResume] = useState("");
-  const [firstNameFromResume, setFirstNameFromResume] = useState("");
-  const [lastNameFromResume, setLastNameFromResume] = useState("");
+  const [fullNameFromResume, setFullNameFromResume] = useState("");
+  const [fullNameInputValue, setFullNameInputValue] = useState(fullNameFromResume || "");
   const [resumeParsingSuccessful, setResumeParsingSuccessful] = useState(false);
   const [emailInputValue, setEmailInputValue] = useState(emailFromResume || "");
   const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || "");
-  const [firstNameInputValue, setFirstNameInputValue] = useState(firstNameFromResume || "");
-  const [lastNameInputValue, setLastNameInputValue] = useState(lastNameFromResume || "");
   const history = useHistory();
   const { user } = useUser();
+
 
   // Fetch question data
   useEffect(() => {
@@ -57,6 +56,7 @@ const ApplicationQuestions = () => {
     });
   }, [questions]);
 
+
   // Handle changes for Yes/No questions
   const handleYesNoChange = (questionId, answer) => {
     const storedAnswers = JSON.parse(localStorage.getItem("answers")) || {};
@@ -67,6 +67,12 @@ const ApplicationQuestions = () => {
 
     setAnswers(updatedAnswers);
   };
+
+
+
+
+
+
 
   // Handle changes for Multiple-Choice questions
   const handleMultipleChoiceChange = (questionId, answer) => {
@@ -94,6 +100,11 @@ const ApplicationQuestions = () => {
     localStorage.setItem("answers", JSON.stringify(answers));
   };
 
+
+
+
+
+
   // Handle file uploading
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -111,6 +122,8 @@ const ApplicationQuestions = () => {
       fileReader.readAsArrayBuffer(file);
     }
   };
+
+
 
   // Extract text from a PDF
   const extractTextFromPDF = async (pdfData) => {
@@ -131,20 +144,24 @@ const ApplicationQuestions = () => {
     return pdfText;
   };
 
+
+
+
   const handleInfoExtraction = (pdfText) => {
     const emailMatches = extractEmails(pdfText);
     const phoneMatches = extractPhones(pdfText);
   
-    // New code to extract first and last names
+    // Extract full name
     const names = extractNames(pdfText);
-    console.log("Extracted Names:", names); // Log the extracted names
   
     if (names) {
-      const [firstName, lastName] = names;
-      console.log("First Name:", firstName);
-      console.log("Last Name:", lastName);
-      setFirstNameFromResume(firstName);
-      setLastNameFromResume(lastName);
+      const fullName = names.join(" "); // Combine first name and last name into full name
+      console.log("Full Name:", fullName);
+      setFullNameFromResume(fullName);
+
+      // These next two lines of code responsible for getting the fullName to show up in the input
+      updateAnswers({ 1: fullName});
+      setFullNameInputValue(fullName);
     }
   
     if (emailMatches) {
@@ -161,7 +178,7 @@ const ApplicationQuestions = () => {
       setPhoneInputValue(phones);
     }
   
-    setResumeParsingSuccessful(emailMatches || phoneMatches);
+    setResumeParsingSuccessful(emailMatches || phoneMatches || names); // Added || names
   };
   
 
@@ -171,27 +188,30 @@ const ApplicationQuestions = () => {
     return pdfText.match(emailRegex);
   };
 
+
   // Helper function to extract phone numbers using regex
   const extractPhones = (pdfText) => {
     const phoneRegex = /(\d{3}[-.\s]??\d{3}[-.\s]??\d{4}|\(\d{3}\)[-?.\s]??\d{3}[-.\s]??\d{4}|\d{3}[-.\s]??\d{4})/g;
     return pdfText.match(phoneRegex);
   };
 
-  // Helper function to extract first and last names
-  const extractNames = (pdfText) => {
-    // Implement a regular expression or other logic to extract first and last names
-    const nameRegex = /(\b[A-Z][a-z]*\b)/g; // Example regex for names
-    const matches = pdfText.match(nameRegex);
 
-    if (matches && matches.length >= 2) {
-      // Extract the first and last names
-      const firstName = matches[0];
-      const lastName = matches[1];
-      return [firstName, lastName];
-    }
+// Helper function to extract first and last names
+const extractNames = (pdfText) => {
+  // Implement a regular expression or other logic to extract first and last names
+  const nameRegex = /(\b[A-Z][a-z]*\b)/g;
+  const matches = pdfText.match(nameRegex);
 
-    return null;
-  };
+  if (matches && matches.length >= 2) {
+    // Extract the first and last names
+    const firstName = matches[0];
+    const lastName = matches[1];
+    console.log("extractNames helper function:", firstName, lastName);
+    return [firstName, lastName];
+  }
+
+  return null;
+};
 
 
 
@@ -206,13 +226,16 @@ useEffect(() => {
   const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
 
   setAnswers(storedAnswers);
-  setFirstNameFromResume(storedAnswers[1] || '')
+  setFullNameInputValue(storedAnswers[1] || '');
   setEmailInputValue(storedAnswers[2] || '');
   setPhoneInputValue(storedAnswers[3] || '');
 
   // Save the modified answers 
   localStorage.setItem('answers', JSON.stringify(storedAnswers));
+  localStorage.clear(); // Added this to clearn answers
 }, []);
+
+
 
 
 // The second useEffect is responsible for saving answers, including email and phone, to local storage whenever they change
@@ -221,12 +244,16 @@ useEffect(() => {
   const modifiedAnswers = { ...answers };
 
   // Update email and phone value
+  modifiedAnswers[1] = fullNameInputValue;
   modifiedAnswers[2] = emailInputValue; 
   modifiedAnswers[3] = phoneInputValue; 
 
   // Save all answers, including email and phone, to local storage whenever they change
   localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
-}, [answers, emailInputValue, phoneInputValue]);
+}, [answers, fullNameInputValue, emailInputValue, phoneInputValue]);
+
+
+
 
 // The third useEffect is for saving the state to local storage before leaving the page
 useEffect(() => {
@@ -235,6 +262,7 @@ useEffect(() => {
     const modifiedAnswers = { ...answers };
 
     // Update email and phone value
+    modifiedAnswers[1] = fullNameInputValue;
     modifiedAnswers[2] = emailInputValue; 
     modifiedAnswers[3] = phoneInputValue; 
 
@@ -242,12 +270,15 @@ useEffect(() => {
     localStorage.setItem('answers', JSON.stringify(modifiedAnswers));
   });
 
+
+
   // Remove the event listener when the component is unmounted to avoid memory leaks
   return () => {
     window.removeEventListener('beforeunload', (event) => {
       const modifiedAnswers = { ...answers };
 
        // Update email and phone value
+      modifiedAnswers[1] = fullNameInputValue;
       modifiedAnswers[2] = emailInputValue;
       modifiedAnswers[3] = phoneInputValue; 
 
@@ -284,11 +315,14 @@ const handleSubmit = (e) => {
     return; // Don't proceed with the request if JSON is invalid
   }
 
-  if (questionId === 2) {
+  if (questionId === 1) {
+    answers[1] = fullNameInputValue;
+  } else if (questionId === 2) {
     answers[2] = emailInputValue;
   } else if (questionId === 3) {
     answers[3] = phoneInputValue;
   }
+
 
   formData.append("answers", answersJSON);
 
@@ -324,10 +358,8 @@ return (
           setEmailInputValue={setEmailInputValue}
           phoneInputValue={phoneInputValue}
           setPhoneInputValue={setPhoneInputValue}
-          firstNameInputValue={firstNameInputValue}
-          setFirstNameInputValue={setFirstNameInputValue}
-          lastNameInputValue={lastNameInputValue}
-          setLastNameInputValue={setLastNameInputValue}
+          fullNameInputValue={fullNameInputValue}
+          setFullNameInputValue={setFullNameInputValue}
           answers={answers}
           handleAnswerChange={handleAnswerChange}
         />

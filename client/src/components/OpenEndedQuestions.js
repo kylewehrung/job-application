@@ -8,10 +8,8 @@ function OpenEndedQuestions({
   setEmailInputValue,
   setPhoneInputValue,
   phoneInputValue,
-  firstNameInputValue,
-  setFirstNameInputValue,
-  lastNameInputValue,
-  setLastNameInputValue,
+  fullNameInputValue,
+  setFullNameInputValue,
   answers,
   handleAnswerChange,
 }) {
@@ -32,25 +30,21 @@ function OpenEndedQuestions({
                       : "Enter Your Answer"
                   }
                   value={
-                    question.id === 2
+                    question.id === 1
+                      ? fullNameInputValue
+                      : question.id === 2
                       ? emailInputValue
                       : question.id === 3
                       ? phoneInputValue
-                      : question.id === 1
-                      ? `${firstNameInputValue} ${lastNameInputValue}`
                       : answers[question.id] || ""
                   }
                   onChange={(e) => {
-                    if (question.id === 2) {
+                    if (question.id === 1) {
+                      setFullNameInputValue(e.target.value);
+                    } else if (question.id === 2) {
                       setEmailInputValue(e.target.value);
                     } else if (question.id === 3) {
-                      setPhoneInputValue(e.target.value);
-                    } else if (question.id === 1) {
-                      const [firstName, lastName] = e.target.value.split(" ");
-                      console.log("First Name:", firstName);
-                      console.log("Last Name:", lastName);
-                      setFirstNameInputValue(firstName);
-                      setLastNameInputValue(lastName);
+                     setPhoneInputValue(e.target.value)
                     }
                     handleAnswerChange(question.id, e.target.value);
                   }}
