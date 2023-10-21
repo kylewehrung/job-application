@@ -6,11 +6,11 @@ const Input = styled.input`
   flex-direction: column;
   align-items: center;
   width: 735px;
-  height: 80px; 
-  padding: 12px;
+  height: 90px; 
+  padding: 15px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  font-size: 22px;
+  font-size: 24px;
 `;
 
 export default Input;

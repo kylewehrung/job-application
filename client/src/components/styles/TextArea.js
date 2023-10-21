@@ -11,7 +11,7 @@ const Input = styled.textarea`
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  font-size: 22px;
+  font-size: 24px;
 `;
 
 export default Input;
