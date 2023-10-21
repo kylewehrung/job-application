@@ -11,20 +11,23 @@ import FileUpload from "./FileUpload";
 
 
 
-function ApplicationQuestions() {
+
+const ApplicationQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [questionId, setQuestionId] = useState(null);
-  const [file, setFile] = useState(null); 
-  const [emailFromResume, setEmailFromResume] = useState(""); 
+  const [file, setFile] = useState(null);
+  const [emailFromResume, setEmailFromResume] = useState("");
   const [phoneFromResume, setPhoneFromResume] = useState("");
+  const [firstNameFromResume, setFirstNameFromResume] = useState("");
+  const [lastNameFromResume, setLastNameFromResume] = useState("");
   const [resumeParsingSuccessful, setResumeParsingSuccessful] = useState(false);
-  const [emailInputValue, setEmailInputValue] = useState(emailFromResume || '');
-  const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || '');
+  const [emailInputValue, setEmailInputValue] = useState(emailFromResume || "");
+  const [phoneInputValue, setPhoneInputValue] = useState(phoneFromResume || "");
+  const [firstNameInputValue, setFirstNameInputValue] = useState(firstNameFromResume || "");
+  const [lastNameInputValue, setLastNameInputValue] = useState(lastNameFromResume || "");
   const history = useHistory();
   const { user } = useUser();
-
-
 
   // Fetch question data
   useEffect(() => {
@@ -40,150 +43,155 @@ function ApplicationQuestions() {
       })
       .catch((error) => console.log("catch error:", error));
   }, []);
-  
 
+  // Initialize state with answers from local storage or an empty object
+  useEffect(() => {
+    const storedAnswers = JSON.parse(localStorage.getItem("answers")) || {};
+    setAnswers(storedAnswers);
 
+    // Load answers for "Yes/No" and multiple-choice questions into state
+    questions.forEach((question) => {
+      if (question.type === "yesNo" || (question.type === "multipleChoice" && storedAnswers[question.id])) {
+        handleAnswerChange(question.id, storedAnswers[question.id]);
+      }
+    });
+  }, [questions]);
 
+  // Handle changes for Yes/No questions
+  const handleYesNoChange = (questionId, answer) => {
+    const storedAnswers = JSON.parse(localStorage.getItem("answers")) || {};
 
+    // Update stored answers
+    const updatedAnswers = { ...storedAnswers, [questionId]: answer };
+    localStorage.setItem("answers", JSON.stringify(updatedAnswers));
 
-// Initialize state with answers from local storage or an empty object
-useEffect(() => {
-  const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
-  setAnswers(storedAnswers);
-  
-  // Load answers for "Yes/No" and multiple-choice questions into state
-  questions.forEach((question) => {
-    if (question.type === 'yesNo' || (question.type === 'multipleChoice' && storedAnswers[question.id])) {
-      handleAnswerChange(question.id, storedAnswers[question.id]);
+    setAnswers(updatedAnswers);
+  };
+
+  // Handle changes for Multiple-Choice questions
+  const handleMultipleChoiceChange = (questionId, answer) => {
+    setAnswers({ ...answers, [questionId]: answer });
+
+    // Update stored answers
+    const updatedAnswers = { ...answers, [questionId]: answer };
+    localStorage.setItem("answers", JSON.stringify(updatedAnswers));
+  };
+
+  // Update state with new answers
+  const handleAnswerChange = (questionId, answer) => {
+    updateAnswers({ [questionId]: answer });
+  };
+
+  // Update state with new answers and save them to local storage
+  const updateAnswers = (newAnswers) => {
+    const updatedAnswers = { ...answers, ...newAnswers };
+    setAnswers(updatedAnswers);
+    saveAnswersToLocalStorage(updatedAnswers);
+  };
+
+  // Save answers to local storage
+  const saveAnswersToLocalStorage = (answers) => {
+    localStorage.setItem("answers", JSON.stringify(answers));
+  };
+
+  // Handle file uploading
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileReader = new FileReader();
+
+      fileReader.onload = async () => {
+        const pdfData = fileReader.result;
+        const pdfText = await extractTextFromPDF(pdfData);
+
+        handleInfoExtraction(pdfText);
+        setFile(file);
+      };
+
+      fileReader.readAsArrayBuffer(file);
     }
-  });
-}, [questions]);
+  };
 
+  // Extract text from a PDF
+  const extractTextFromPDF = async (pdfData) => {
+    const pdfjsLib = window["pdfjs-dist/build/pdf"];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
+    const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+    const numPages = pdf.numPages;
+    let pdfText = "";
 
-// Handle changes for Yes/No questions
-const handleYesNoChange = (questionId, answer) => {
-  const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
+    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map((item) => item.str).join(" ");
+      pdfText += pageText + "\n";
+    }
 
-  // Update stored answers 
-  const updatedAnswers = { ...storedAnswers, [questionId]: answer };
-  localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+    return pdfText;
+  };
 
-  setAnswers(updatedAnswers);
-};
+  const handleInfoExtraction = (pdfText) => {
+    const emailMatches = extractEmails(pdfText);
+    const phoneMatches = extractPhones(pdfText);
+  
+    // New code to extract first and last names
+    const names = extractNames(pdfText);
+    console.log("Extracted Names:", names); // Log the extracted names
+  
+    if (names) {
+      const [firstName, lastName] = names;
+      console.log("First Name:", firstName);
+      console.log("Last Name:", lastName);
+      setFirstNameFromResume(firstName);
+      setLastNameFromResume(lastName);
+    }
+  
+    if (emailMatches) {
+      const emails = emailMatches.join(", ");
+      setEmailFromResume(emails);
+      updateAnswers({ 2: emails });
+      setEmailInputValue(emails);
+    }
+  
+    if (phoneMatches) {
+      const phones = phoneMatches.join(", ");
+      setPhoneFromResume(phones);
+      updateAnswers({ 3: phones });
+      setPhoneInputValue(phones);
+    }
+  
+    setResumeParsingSuccessful(emailMatches || phoneMatches);
+  };
+  
 
+  // Helper function to extract emails using regex
+  const extractEmails = (pdfText) => {
+    const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
+    return pdfText.match(emailRegex);
+  };
 
-// Handle changes for Multiple-Choice questions
-const handleMultipleChoiceChange = (questionId, answer) => {
+  // Helper function to extract phone numbers using regex
+  const extractPhones = (pdfText) => {
+    const phoneRegex = /(\d{3}[-.\s]??\d{3}[-.\s]??\d{4}|\(\d{3}\)[-?.\s]??\d{3}[-.\s]??\d{4}|\d{3}[-.\s]??\d{4})/g;
+    return pdfText.match(phoneRegex);
+  };
 
-  setAnswers({ ...answers, [questionId]: answer });
+  // Helper function to extract first and last names
+  const extractNames = (pdfText) => {
+    // Implement a regular expression or other logic to extract first and last names
+    const nameRegex = /(\b[A-Z][a-z]*\b)/g; // Example regex for names
+    const matches = pdfText.match(nameRegex);
 
-  // Update stored answers 
-  const updatedAnswers = { ...answers, [questionId]: answer };
-  localStorage.setItem('answers', JSON.stringify(updatedAnswers));
-};
+    if (matches && matches.length >= 2) {
+      // Extract the first and last names
+      const firstName = matches[0];
+      const lastName = matches[1];
+      return [firstName, lastName];
+    }
 
-
-
-
-// Update state with new answers
-const handleAnswerChange = (questionId, answer) => {
-  updateAnswers({ [questionId]: answer });
-};
-
-// Update state with new answers and save them to local storage
-const updateAnswers = (newAnswers) => {
-  const updatedAnswers = { ...answers, ...newAnswers };
-  setAnswers(updatedAnswers);
-  saveAnswersToLocalStorage(updatedAnswers);
-};
-
-// Save answers to local storage
-const saveAnswersToLocalStorage = (answers) => {
-  localStorage.setItem('answers', JSON.stringify(answers));
-};
-
-
-
-
-
-
-
-
-
-
-// Handle file uploading
-const handleFileUpload = async (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const fileReader = new FileReader();
-
-    fileReader.onload = async () => {
-      const pdfData = fileReader.result;
-      const pdfText = await extractTextFromPDF(pdfData);
-
-      handleInfoExtraction(pdfText);
-      setFile(file);
-    };
-
-    fileReader.readAsArrayBuffer(file);
-  }
-};
-
-// Extract text from a PDF
-const extractTextFromPDF = async (pdfData) => {
-  const pdfjsLib = window['pdfjs-dist/build/pdf'];
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
-  const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
-  const numPages = pdf.numPages;
-  let pdfText = "";
-
-  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items.map((item) => item.str).join(" ");
-    pdfText += pageText + "\n";
-  }
-
-  return pdfText;
-};
-
-
-const handleInfoExtraction = (pdfText) => {
-  const emailMatches = extractEmails(pdfText);
-  const phoneMatches = extractPhones(pdfText);
-
-  if (emailMatches) {
-    const emails = emailMatches.join(", ");
-    setEmailFromResume(emails);
-    updateAnswers({ 2: emails });
-    setEmailInputValue(emails);
-  }
-
-  if (phoneMatches) {
-    const phones = phoneMatches.join(", ");
-    setPhoneFromResume(phones);
-    updateAnswers({ 3: phones });
-    setPhoneInputValue(phones);
-  }
-
-  setResumeParsingSuccessful(emailMatches || phoneMatches);
-};
-
-
-// Helper function to extract emails using regex
-const extractEmails = (pdfText) => {
-  const emailRegex = /[\w.-]+@[\w.-]+\.\w+/g;
-  return pdfText.match(emailRegex);
-};
-
-// Helper function to extract phone numbers using regex
-const extractPhones = (pdfText) => {
-  const phoneRegex = /(\d{3}[-.\s]??\d{3}[-.\s]??\d{4}|\(\d{3}\)[-?.\s]??\d{3}[-.\s]??\d{4}|\d{3}[-.\s]??\d{4})/g;
-  return pdfText.match(phoneRegex);
-};
-
+    return null;
+  };
 
 
 
@@ -198,7 +206,7 @@ useEffect(() => {
   const storedAnswers = JSON.parse(localStorage.getItem('answers')) || {};
 
   setAnswers(storedAnswers);
-
+  setFirstNameFromResume(storedAnswers[1] || '')
   setEmailInputValue(storedAnswers[2] || '');
   setPhoneInputValue(storedAnswers[3] || '');
 
@@ -302,49 +310,51 @@ const handleSubmit = (e) => {
     
   
   
-  
 
-  return (
-    <BaseBackground>
-      <Background>
-        <Content>
-          {/* Render FileUpload component here */}
-          <FileUpload handleFileUpload={handleFileUpload} />
-          {/* Render OpenEndedQuestions component here */}
-          <OpenEndedQuestions
-            questions={questions}
-            emailInputValue={emailInputValue}
-            setEmailInputValue={setEmailInputValue}
-            phoneInputValue={phoneInputValue}
-            setPhoneInputValue={setPhoneInputValue}
-            answers={answers}
-            handleAnswerChange={handleAnswerChange}
-          />
-          {/* Render CoverLetter component here */}
-          <CoverLetter
-            questions={questions}
-            answers={answers}
-            handleAnswerChange={handleAnswerChange}
-          />
-          {/* Render YesNoQuestions and MultipleChoiceQuestions components here */}
-          <YesNoQuestions
-            questions={questions}
-            answers={answers}
-            handleYesNoChange={handleYesNoChange}
-          />
-          <MultipleChoiceQuestions
-            questions={questions}
-            answers={answers}
-            handleMultipleChoiceChange={handleMultipleChoiceChange}
-          />
-          {/* Render Submit button here */}
-          <Button onClick={handleSubmit}>Submit Answers</Button>
-        </Content>
-      </Background>
-    </BaseBackground>
-  );
-
-}
+return (
+  <BaseBackground>
+    <Background>
+      <Content>
+        {/* Render FileUpload component here */}
+        <FileUpload handleFileUpload={handleFileUpload} />
+        {/* Render OpenEndedQuestions component here */}
+        <OpenEndedQuestions
+          questions={questions}
+          emailInputValue={emailInputValue}
+          setEmailInputValue={setEmailInputValue}
+          phoneInputValue={phoneInputValue}
+          setPhoneInputValue={setPhoneInputValue}
+          firstNameInputValue={firstNameInputValue}
+          setFirstNameInputValue={setFirstNameInputValue}
+          lastNameInputValue={lastNameInputValue}
+          setLastNameInputValue={setLastNameInputValue}
+          answers={answers}
+          handleAnswerChange={handleAnswerChange}
+        />
+        {/* Render CoverLetter component here */}
+        <CoverLetter
+          questions={questions}
+          answers={answers}
+          handleAnswerChange={handleAnswerChange}
+        />
+        {/* Render YesNoQuestions and MultipleChoiceQuestions components here */}
+        <YesNoQuestions
+          questions={questions}
+          answers={answers}
+          handleYesNoChange={handleYesNoChange}
+        />
+        <MultipleChoiceQuestions
+          questions={questions}
+          answers={answers}
+          handleMultipleChoiceChange={handleMultipleChoiceChange}
+        />
+        {/* Render Submit button here */}
+        <Button onClick={handleSubmit}>Submit Answers</Button>
+      </Content>
+    </Background>
+  </BaseBackground>
+);
+};
 
 
 
