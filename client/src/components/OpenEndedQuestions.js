@@ -22,7 +22,7 @@ function OpenEndedQuestions({
             {question.id !== 9 ? (
               <>
                 <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
-                <Input
+                <StyledInput
                   type="text"
                   placeholder={
                     question.id < 8
@@ -63,7 +63,7 @@ const Column = styled.div`
   flex-direction: column;
   align-items: left;
   margin-bottom: 30px;
-  margin-top: 50px;
+  margin-top: 80px;
   text-align: left;
 `;
 
@@ -74,10 +74,11 @@ const StyledParagraph = styled.p`
   font-weight: bold;
   font-family: cascadia;
   color: #333;
-  line-height: 1.5;
-  text-align: left;
-  text-decoration: none;
   `;
+
+const StyledInput = styled(Input)`
+  margin-bottom: 20px;
+`;
 
 
 export default OpenEndedQuestions;

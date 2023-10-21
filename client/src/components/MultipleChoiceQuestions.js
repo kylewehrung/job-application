@@ -19,7 +19,7 @@ function MultipleChoiceQuestions({ questions, answers, handleMultipleChoiceChang
               <StyledParagraph>{choicesObject.question}</StyledParagraph>
               <Label htmlFor={`multipleChoiceSelect-${question.id}`}/>
              
-              <select
+              <StyledSelect
                 className="form-select form-select-lg mb-3"
                 name={`multipleChoiceSelect-${question.id}`}
                 id={`multipleChoiceSelect-${question.id}`}
@@ -34,7 +34,7 @@ function MultipleChoiceQuestions({ questions, answers, handleMultipleChoiceChang
                     {choice}
                   </option>
                 ))}
-            </select>
+            </StyledSelect>
 
             </Column>
           );
@@ -47,7 +47,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-left: -55px;
+  ${'' /* margin-left: -25px; */}
   margin-top: 10px;
   background-attachment: fixed;
 `;
@@ -59,9 +59,12 @@ const StyledParagraph = styled.p`
   font-weight: bold; 
   font-family: cascadia;
   color: #333;
-  line-height: 1.5;
-  text-align: left;
-  text-decoration: none;
+  `;
+
+
+const StyledSelect = styled.select`
+  width: 735px;
+  height: 75px;
 `;
 
 

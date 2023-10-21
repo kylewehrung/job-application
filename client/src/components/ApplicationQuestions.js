@@ -377,7 +377,7 @@ return (
           handleMultipleChoiceChange={handleMultipleChoiceChange}
         />
         {/* Render Submit button here */}
-        <Button onClick={handleSubmit}>Submit Answers</Button>
+        <SubmitButton onClick={handleSubmit}>Submit Answers</SubmitButton>
       </Content>
     </Background>
   </BaseBackground>
@@ -385,6 +385,11 @@ return (
 };
 
 
+const SubmitButton = styled(Button)`
+  margin-top: 25px;
+  margin-bottom: 200px;
+
+`;
 
 
 const BaseBackground = styled.div`

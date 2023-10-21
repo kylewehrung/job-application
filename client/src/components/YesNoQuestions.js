@@ -49,7 +49,8 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-bottom: 25px;
+  margin-bottom: 45px;
+  margin-left: 60px;
   background-attachment: fixed;
 `;
 
@@ -65,8 +66,8 @@ const RadioButtonContainer = styled.label`
 
   /* Style the custom radio button */
   span {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border: 4px solid white;
     border-radius: 50%;
     background-color: transparent;
@@ -85,18 +86,19 @@ const RadioButtonContainer = styled.label`
 
 
 const StyledParagraph = styled.p`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold; 
   font-family: cascadia;
-
+  color: #333;
 `;
 
 const StyledYesNo = styled.p`
-  margin-left: 75px;
+  margin-left: 85px;
   margin-bottom: 1px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold; 
   font-family: cascadia;
+  color: #333;
 `;
 
 

@@ -36,7 +36,7 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-bottom: 30px;
+  margin-bottom: 100px;
   margin-top: -25px;
   text-align: left;
 `;
@@ -48,9 +48,6 @@ const StyledParagraph = styled.p`
   font-weight: bold; 
   font-family: cascadia;
   color: #333;
-  line-height: 1.5;
-  text-align: left;
-  text-decoration: none;
 `;
 
 
