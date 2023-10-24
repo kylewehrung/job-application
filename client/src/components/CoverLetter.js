@@ -4,11 +4,11 @@ import TextArea from "./styles/TextArea";
 
 
 function CoverLetter({
-    questions,
-    answers,
-    handleAnswerChange,
+  questions,
+  answers,
+  handleAnswerChange,
 }) {
-    return (
+  return (
     <div>
       {questions
         .filter((question) => question.id === 9)
@@ -17,7 +17,7 @@ function CoverLetter({
             <StyledParagraph>
               Add a cover letter or anything else you'd like to say about yourself
             </StyledParagraph>
-            <TextArea
+            <TextAreaWithPreserveFormatting
               placeholder="Enter Your Answer"
               value={answers[question.id] || ""}
               onChange={(e) => {
@@ -29,8 +29,6 @@ function CoverLetter({
     </div>
   );
 }
-
-
 
 const Column = styled.div`
   display: flex;
@@ -50,7 +48,9 @@ const StyledParagraph = styled.p`
   color: #333;
 `;
 
+const TextAreaWithPreserveFormatting = styled(TextArea)`
+  white-space: pre-wrap;
+`;
 
 
 export default CoverLetter;
-

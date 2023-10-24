@@ -36,6 +36,8 @@ function OpenEndedQuestions({
                       ? emailInputValue
                       : question.id === 3
                       ? phoneInputValue
+                      : question.id === 4
+                      ? answers[4] 
                       : answers[question.id] || ""
                   }
                   onChange={(e) => {
@@ -44,9 +46,13 @@ function OpenEndedQuestions({
                     } else if (question.id === 2) {
                       setEmailInputValue(e.target.value);
                     } else if (question.id === 3) {
-                     setPhoneInputValue(e.target.value)
+                      setPhoneInputValue(e.target.value);
+                    } else if (question.id === 4) { 
+                      console.log("Recent Company Input:", e.target.value);
+                      handleAnswerChange(4, e.target.value); // Use the appropriate question ID for recent company
+                    } else {
+                      handleAnswerChange(question.id, e.target.value);
                     }
-                    handleAnswerChange(question.id, e.target.value);
                   }}
                 />
               </>
@@ -56,7 +62,6 @@ function OpenEndedQuestions({
     </Column>
   );
 }
-
 
 const Column = styled.div`
   display: flex;
@@ -74,11 +79,10 @@ const StyledParagraph = styled.p`
   font-weight: bold;
   font-family: cascadia;
   color: #333;
-  `;
+`;
 
 const StyledInput = styled(Input)`
   margin-bottom: 20px;
 `;
-
 
 export default OpenEndedQuestions;

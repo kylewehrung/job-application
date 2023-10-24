@@ -83,24 +83,24 @@ function Login({ handleLogin }) {
               <Error key={err}>{err}</Error>
             ))}
             <Column>
-          <p>
-            Not an Only Choss member?&nbsp;
+          <StyledParagraph>
+            New User?&nbsp;
             <Button color="secondary" onClick={() => setShowLogin(false)}>
               Sign Up
             </Button>
-          </p>
+          </StyledParagraph>
           </Column>
         </form>
       ) : (
         <FormBackground>
           <SignUpForm handleLogin={handleLogin} />
           
-          <p>
-            Already a Choss Member?&nbsp;
+          <StyledParagraph>
+            Already have an account?&nbsp;
             <Button color="secondary" onClick={() => setShowLogin(true)}>
               Log In
             </Button>
-          </p>
+          </StyledParagraph>
         </FormBackground>
       )}
     </FormBackground>
@@ -166,11 +166,18 @@ const StyledLabel = styled.label`
   font-size: 2em;
 `;
 
-
-
 const Error = styled.div`
   color: red;
 `;
+
+const StyledParagraph = styled.p`
+  margin-top: 35px;
+  margin-bottom: 5px;
+  font-size: 20px;
+  font-weight: bold; 
+  font-family: cascadia;
+
+  `;
 
 
 export default Login;

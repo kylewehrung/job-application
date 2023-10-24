@@ -12,6 +12,7 @@ import FileUpload from "./FileUpload";
 
 
 
+
 const ApplicationQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -102,8 +103,12 @@ const ApplicationQuestions = () => {
 
 
 
-
-
+  
+  
+  
+  
+  
+  
   // Handle file uploading
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
@@ -145,10 +150,29 @@ const ApplicationQuestions = () => {
 
 
 
+
+
+  // New code for recent company extraction:
+  const extractRecentCompany = (pdfText) => {
+    // Define a regex pattern to match company names. Adjust this pattern as needed.
+    const companyRegex = /Company:\s+([^\n]+)/i;
+    const match = pdfText.match(companyRegex);
+  
+    if (match) {
+      console.log("Recent Company Match:", match[1]); 
+      return match[1];
+    }
+  
+    return null; // Return null if no company name is found
+  };
+  
+  
+  
   const handleInfoExtraction = (pdfText) => {
     const emailMatches = extractEmails(pdfText);
     const phoneMatches = extractPhones(pdfText);
     const names = extractNames(pdfText);
+    const recentCompany = extractRecentCompany(pdfText);
   
     // Object to store all the answers
     const allAnswers = {};
@@ -156,22 +180,26 @@ const ApplicationQuestions = () => {
     if (names) {
       const fullName = names.join(" ");
       setFullNameFromResume(fullName);
-      allAnswers[1] = fullName; // Update the answer 
-      setFullNameInputValue(fullName); // Update the input value 
+      allAnswers[1] = fullName; // Update the answer
+      setFullNameInputValue(fullName); // Update the input value
     }
   
     if (emailMatches) {
       const emails = emailMatches.join(", ");
       setEmailFromResume(emails);
-      allAnswers[2] = emails; 
-      setEmailInputValue(emails); 
+      allAnswers[2] = emails;
+      setEmailInputValue(emails);
     }
   
     if (phoneMatches) {
       const phones = phoneMatches.join(", ");
       setPhoneFromResume(phones);
-      allAnswers[3] = phones; 
-      setPhoneInputValue(phones); 
+      allAnswers[3] = phones;
+      setPhoneInputValue(phones);
+    }
+  
+    if (recentCompany) {
+      allAnswers[4] = recentCompany;
     }
   
     // Update the entire answers object with all of the extracted values
@@ -319,6 +347,9 @@ const handleSubmit = (e) => {
     answers[3] = phoneInputValue;
   }
 
+  if (answers[4]) {
+    formData.append("recentCompany", answers[4]); // Append the recent company
+  }
 
   formData.append("answers", answersJSON);
 
