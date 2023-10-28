@@ -152,22 +152,25 @@ const ApplicationQuestions = () => {
 
 
 
-  // New code for recent company extraction:
+  // Code for recent company extraction:
   const extractRecentCompany = (pdfText) => {
-    console.log("PDF Text:", pdfText); // Debugging line
-  
-    // Define a regex pattern to match company names. Needs adjusting
-    const companyRegex = /(\w+(\s\w+)?\s[A-Za-z]+\,\s[A-Za-z]+\s\d+\s-\sPresent)/i;
-    const match = pdfText.match(companyRegex);
+    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,6})\d{1,2}\/\d{4}\s*-\s*Present/i;
+    const match = pdfText.match(regex);
   
     if (match) {
-      const companyAndDate = match[0].split(' - Present')[0];
-      console.log("Recent Company Match:", companyAndDate);
-      return companyAndDate;
+      const recentCompany = match[1].trim();
+      console.log("Recent Company Match:", recentCompany);
+      return recentCompany;
     }
   
-    return null; // Return null if no company is found
+    return null; // Return null if no recent company is found
   };
+  
+  
+  
+  
+  
+  
   
   
   
