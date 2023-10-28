@@ -154,16 +154,19 @@ const ApplicationQuestions = () => {
 
   // New code for recent company extraction:
   const extractRecentCompany = (pdfText) => {
-    // Define a regex pattern to match company names. Adjust this pattern as needed.
-    const companyRegex = /Company:\s+([^\n]+)/i;
+    console.log("PDF Text:", pdfText); // Debugging line
+  
+    // Define a regex pattern to match company names. Needs adjusting
+    const companyRegex = /(\w+(\s\w+)?\s[A-Za-z]+\,\s[A-Za-z]+\s\d+\s-\sPresent)/i;
     const match = pdfText.match(companyRegex);
   
     if (match) {
-      console.log("Recent Company Match:", match[1]); 
-      return match[1];
+      const companyAndDate = match[0].split(' - Present')[0];
+      console.log("Recent Company Match:", companyAndDate);
+      return companyAndDate;
     }
   
-    return null; // Return null if no company name is found
+    return null; // Return null if no company is found
   };
   
   
@@ -173,6 +176,7 @@ const ApplicationQuestions = () => {
     const phoneMatches = extractPhones(pdfText);
     const names = extractNames(pdfText);
     const recentCompany = extractRecentCompany(pdfText);
+    console.log("Recent Company:", recentCompany);
   
     // Object to store all the answers
     const allAnswers = {};
@@ -345,9 +349,7 @@ const handleSubmit = (e) => {
     answers[2] = emailInputValue;
   } else if (questionId === 3) {
     answers[3] = phoneInputValue;
-  }
-
-  if (answers[4]) {
+  } else if (questionId === 4) {
     formData.append("recentCompany", answers[4]); // Append the recent company
   }
 
@@ -452,4 +454,5 @@ const Content = styled.div`
 
 
 export default ApplicationQuestions;
+
 
