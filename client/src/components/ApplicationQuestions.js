@@ -154,7 +154,7 @@ const ApplicationQuestions = () => {
 
   // Code for recent company extraction:
   const extractRecentCompany = (pdfText) => {
-    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,6})\d{1,2}\/\d{4}\s*-\s*Present/i;
+    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,7})\d{1,2}\/\d{4}\s*-\s*Present/i;
     const match = pdfText.match(regex);
   
     if (match) {
@@ -165,7 +165,6 @@ const ApplicationQuestions = () => {
   
     return null; // Return null if no recent company is found
   };
-  
   
   
   
