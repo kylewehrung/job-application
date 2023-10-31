@@ -152,32 +152,39 @@ const ApplicationQuestions = () => {
 
 
 
+
+
   // Code for recent company extraction:
-  const extractRecentCompany = (pdfText) => {
-    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,7})\d{1,2}\/\d{4}\s*-\s*Present/i;
+  const extractExperienceText = (pdfText) => {
+    pdfText = pdfText.replace(/\n+/g, ' '); // Replace line breaks with spaces
+    const regex = /(?<=\bexperience\b\s+)(?:experienced\s+)*(.+?present)/i;
     const match = pdfText.match(regex);
   
     if (match) {
-      const recentCompany = match[1].trim();
-      console.log("Recent Company Match:", recentCompany);
-      return recentCompany;
+      const experienceText = match[1].trim();
+      console.log("Experience Text:", experienceText);
+      return experienceText;
     }
   
-    return null; // Return null if no recent company is found
+    return null; // Return null if the section is not found
   };
   
   
   
   
   
+
   
+  
+
+
   
   
   const handleInfoExtraction = (pdfText) => {
     const emailMatches = extractEmails(pdfText);
     const phoneMatches = extractPhones(pdfText);
     const names = extractNames(pdfText);
-    const recentCompany = extractRecentCompany(pdfText);
+    const recentCompany = extractExperienceText(pdfText);
     console.log("Recent Company:", recentCompany);
   
     // Object to store all the answers
