@@ -157,17 +157,20 @@ const ApplicationQuestions = () => {
   // Code for recent company extraction:
   const extractExperienceText = (pdfText) => {
     pdfText = pdfText.replace(/\n+/g, ' '); // Replace line breaks with spaces
-    const regex = /(?<=\bexperience\b\s+)(?:experienced\s+)*(.+?present)/i;
-    const match = pdfText.match(regex);
-  
-    if (match) {
-      const experienceText = match[1].trim();
-      console.log("Experience Text:", experienceText);
-      return experienceText;
+    const experienceIndex = pdfText.indexOf('EXPERIENCE');
+    if (experienceIndex !== -1) {
+      pdfText = pdfText.substring(experienceIndex + 'EXPERIENCE'.length); // Skip to 'experience'
+      const presentIndex = pdfText.toLowerCase().indexOf('present');
+      if (presentIndex !== -1) {
+        const experienceText = pdfText.substring(0, presentIndex).trim();
+        console.log("Experience Text:", experienceText);
+        return experienceText;
+      }
     }
   
     return null; // Return null if the section is not found
   };
+  
   
   
   
