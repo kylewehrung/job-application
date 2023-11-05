@@ -171,6 +171,30 @@ const ApplicationQuestions = () => {
     return null; // Return null if the section is not found
   };
   
+
+
+
+  
+  const extractExperienceAndSevenWords = (pdfText) => {
+    // Try to extract experience text
+    const experienceText = extractExperienceText(pdfText);
+    
+    if (experienceText) {
+      return experienceText;
+    }
+  
+    // If experience text isn't found, extract 7 words before mm/yyyy - Present using regex
+    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,7})\d{1,2}\/\d{4}\s*-\s*Present/i;
+    const match = pdfText.match(regex);
+  
+    if (match) {
+      const text = match[1].trim();
+      return text;
+    }
+  
+    return null; // Return null if no relevant text is found
+  };
+  
   
   
   
@@ -187,8 +211,7 @@ const ApplicationQuestions = () => {
     const emailMatches = extractEmails(pdfText);
     const phoneMatches = extractPhones(pdfText);
     const names = extractNames(pdfText);
-    const recentCompany = extractExperienceText(pdfText);
-    console.log("Recent Company:", recentCompany);
+    const recentCompany = extractExperienceAndSevenWords(pdfText);
   
     // Object to store all the answers
     const allAnswers = {};
