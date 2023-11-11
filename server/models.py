@@ -104,32 +104,3 @@ class Choice(db.Model, SerializerMixin):
         return f"Choice ID: {self.id}, Question ID: {self.question_id}, Choice: {self.choice}"
 
 
-
-
-# Define the Application model
-class Application(db.Model, SerializerMixin):
-    __tablename__ = "applications"
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('application_questions.id'), nullable=False)
-    answer_id = db.Column(db.Integer, db.ForeignKey('answers.id'), nullable=False)
-
-    user = db.relationship('User', backref='applications', lazy=True)
-    question = db.relationship('ApplicationQuestion', backref='applications', lazy=True)
-    answer = db.relationship('Answer', backref='applications', lazy=True)
-
-    def __repr__(self):
-        return (
-            f"Application ID: {self.id}, "
-            f"User ID: {self.user_id}, "
-            f"Question ID: {self.question_id}, "
-            f"Answer ID: {self.answer_id}"
-        )
-
-
-
-
-
-
-

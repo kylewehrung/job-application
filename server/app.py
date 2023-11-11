@@ -182,28 +182,5 @@ api.add_resource(SubmitAnswer, "/<int:question_id>/submit_answer")
 
 
 
-
-
-class UserAllAnswers(Resource):
-    def get(self):
-        user_id = 1  # Replace with the actual user ID
-        user = User.query.get(user_id)
-        if user:
-            user_answers = [{"question_id": answer.question_id, "answer": answer.answer} for answer in user.answers]
-            return {"user_id": user.id, "answers": user_answers}
-        else:
-            return {"message": "User not found"}, 404
-
-api.add_resource(UserAllAnswers, "/user_all_answers")
-
-
-
-
-
-
-
-
-
-
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
