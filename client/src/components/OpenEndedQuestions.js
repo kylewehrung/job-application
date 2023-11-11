@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Input from "./styles/Input";
 
@@ -13,6 +13,12 @@ function OpenEndedQuestions({
   answers,
   handleAnswerChange,
 }) {
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+
+
   return (
     <Column>
       {questions
@@ -22,45 +28,55 @@ function OpenEndedQuestions({
             {question.id !== 9 ? (
               <>
                 <StyledParagraph>{question.open_ended_questions}</StyledParagraph>
-                <StyledInput
-                  type="text"
-                  placeholder={
-                    question.id < 8
-                      ? `Enter Your ${question.open_ended_questions}`
-                      : "Enter Your Answer"
-                  }
-                  value={
-                    question.id === 1
-                      ? fullNameInputValue
-                      : question.id === 2
-                      ? emailInputValue
-                      : question.id === 3
-                      ? phoneInputValue
-                      : question.id === 4
-                      ? answers[4] 
-                      : answers[question.id] || ""
-                  }
-                  onChange={(e) => {
-                    if (question.id === 8) {
-                      let inputValue = e.target.value;
-                      inputValue = inputValue.replace(/[^0-9$,-]/g, ""); // Filter input
-                      handleAnswerChange(8, inputValue); 
-                    } else {
+                {question.id === 8 ? (
+                  <>
+                    <StyledInput
+                      type="text"
+                      placeholder="Enter Your Salary"
+                      value={answers[8] || ""}
+                      onChange={(e) => {
+                        let inputValue = e.target.value;
+                        if (/[^0-9$,-]/.test(inputValue)) {
+                          setErrorMessage("Please enter salary in this format: $00,000");
+                        } else {
+                          setErrorMessage(""); // Clear the error message
+                          handleAnswerChange(8, inputValue);
+                        }
+                      }}
+                    />
+                    {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                  </>
+                ) : (
+                  <StyledInput
+                    type="text"
+                    placeholder={`Enter Your ${question.open_ended_questions}`}
+                    value={
+                      question.id === 1
+                        ? fullNameInputValue
+                        : question.id === 2
+                        ? emailInputValue
+                        : question.id === 3
+                        ? phoneInputValue
+                        : question.id === 4
+                        ? answers[4]
+                        : answers[question.id] || ""
+                    }
+                    onChange={(e) => {
                       if (question.id === 1) {
                         setFullNameInputValue(e.target.value);
                       } else if (question.id === 2) {
                         setEmailInputValue(e.target.value);
                       } else if (question.id === 3) {
                         setPhoneInputValue(e.target.value);
-                      } else if (question.id === 4) { 
+                      } else if (question.id === 4) {
                         console.log("Recent Company Input:", e.target.value);
-                        handleAnswerChange(4, e.target.value); 
+                        handleAnswerChange(4, e.target.value);
                       } else {
                         handleAnswerChange(question.id, e.target.value);
                       }
-                    }
-                  }}
-                />
+                    }}
+                  />
+                )}
               </>
             ) : null}
           </div>
@@ -89,6 +105,13 @@ const StyledParagraph = styled.p`
 
 const StyledInput = styled(Input)`
   margin-bottom: 20px;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  font-size: 16px;
+  font-family: cascadia;
+  margin-top: 5px;
 `;
 
 export default OpenEndedQuestions;
