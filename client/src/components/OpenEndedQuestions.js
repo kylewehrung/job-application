@@ -41,17 +41,23 @@ function OpenEndedQuestions({
                       : answers[question.id] || ""
                   }
                   onChange={(e) => {
-                    if (question.id === 1) {
-                      setFullNameInputValue(e.target.value);
-                    } else if (question.id === 2) {
-                      setEmailInputValue(e.target.value);
-                    } else if (question.id === 3) {
-                      setPhoneInputValue(e.target.value);
-                    } else if (question.id === 4) { 
-                      console.log("Recent Company Input:", e.target.value);
-                      handleAnswerChange(4, e.target.value); 
+                    if (question.id === 8) {
+                      let inputValue = e.target.value;
+                      inputValue = inputValue.replace(/[^0-9$,-]/g, ""); // Filter input
+                      handleAnswerChange(8, inputValue); 
                     } else {
-                      handleAnswerChange(question.id, e.target.value);
+                      if (question.id === 1) {
+                        setFullNameInputValue(e.target.value);
+                      } else if (question.id === 2) {
+                        setEmailInputValue(e.target.value);
+                      } else if (question.id === 3) {
+                        setPhoneInputValue(e.target.value);
+                      } else if (question.id === 4) { 
+                        console.log("Recent Company Input:", e.target.value);
+                        handleAnswerChange(4, e.target.value); 
+                      } else {
+                        handleAnswerChange(question.id, e.target.value);
+                      }
                     }
                   }}
                 />
