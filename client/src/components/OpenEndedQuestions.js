@@ -12,12 +12,11 @@ function OpenEndedQuestions({
   setFullNameInputValue,
   answers,
   handleAnswerChange,
+  fullNameError,
+  emailError,
+  phoneError,
 }) {
-
   const [errorMessage, setErrorMessage] = useState("");
-
-
-
 
   return (
     <Column>
@@ -76,6 +75,15 @@ function OpenEndedQuestions({
                       }
                     }}
                   />
+                )}
+                {question.id === 1 && fullNameError && (
+                  <ErrorMessage>{fullNameError}</ErrorMessage>
+                )}
+                {question.id === 2 && emailError && (
+                  <ErrorMessage>{emailError}</ErrorMessage>
+                )}
+                {question.id === 3 && phoneError && (
+                  <ErrorMessage>{phoneError}</ErrorMessage>
                 )}
               </>
             ) : null}
