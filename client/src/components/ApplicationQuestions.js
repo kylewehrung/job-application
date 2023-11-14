@@ -301,7 +301,7 @@
 
 // Helper function to extract LinkedIn URL
 const extractLinkedInUrl = (pdfText) => {
-  // A regular expression specifically for LinkedIn profiles
+  // A regular expression to capture LinkedIn URLs
   const linkedinRegex = /https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+/g;
   const matches = pdfText.match(linkedinRegex);
 
@@ -309,19 +309,32 @@ const extractLinkedInUrl = (pdfText) => {
     // Return the first LinkedIn URL found
     console.log("LinkedIn URL:", matches[0]);
     return matches[0];
+  } else {
+    // If no match is found, attempt to extract LinkedIn URL from text containing "Linkedin"
+    const embeddedLinkedinRegex = /Linkedin[\s\/]\S+/gi;
+    const embeddedMatch = pdfText.match(embeddedLinkedinRegex);
+
+    if (embeddedMatch) {
+      // Return the first embedded LinkedIn URL found
+      console.log("Embedded LinkedIn URL:", embeddedMatch[0]);
+      return embeddedMatch[0];
+    }
+    
   }
 
   return null;
 };
 
 
+
+
+
   
   
   
 
 
   
-    
   // The first useEffect initializes the state with data from local storage and restores email and phone input values
   useEffect(() => {
     // Retrieve stored answers from local storage

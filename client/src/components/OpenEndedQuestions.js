@@ -61,7 +61,7 @@ function OpenEndedQuestions({
                         : question.id === 4
                         ? answers[4]
                         : answers[question.id] || ""
-                        ? question.id === 5
+                        ? answers[5] 
                         : linkedInInputValue
                     }
                     onChange={(e) => {
