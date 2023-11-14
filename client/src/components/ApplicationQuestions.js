@@ -24,6 +24,7 @@
     const [fullNameError, setFullNameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [phoneError, setPhoneError] = useState("");
+    const [linkedInInputValue, setLinkedInInputValue] = useState("");
     const history = useHistory();
     const { user } = useUser();
   
@@ -202,17 +203,14 @@
     
     
   
-    
-    
-  
-  
-    
+
     
     const handleInfoExtraction = (pdfText) => {
       const emailMatches = extractEmails(pdfText);
       const phoneMatches = extractPhones(pdfText);
       const names = extractNames(pdfText);
       const recentCompany = extractExperienceAndSevenWords(pdfText);
+      const linkedinUrl = extractLinkedInUrl(pdfText);
     
       // Object to store all the answers
       const allAnswers = {};
@@ -242,11 +240,21 @@
         allAnswers[4] = recentCompany;
       }
     
+      if (linkedinUrl) {
+        allAnswers[5] = linkedinUrl; // Assuming input 5 is for LinkedIn URL
+      }
+    
       // Update the entire answers object with all of the extracted values
       updateAnswers(allAnswers);
     };
+  
+  
     
     
+
+  
+
+
   
     // Helper function to extract emails using regex
     const extractEmails = (pdfText) => {
@@ -279,10 +287,24 @@
   };
   
   
+
+  // Helper function to extract LinkedIn URL
+const extractLinkedInUrl = (pdfText) => {
+  const linkedinRegex = /linkedin\.com\/\S+/gi;
+  const match = pdfText.match(linkedinRegex);
+
+  if (match) {
+    return match[0];
+  }
+
+  return null;
+};
   
   
   
   
+
+
   
     
   // The first useEffect initializes the state with data from local storage and restores email and phone input values
@@ -417,6 +439,8 @@
       answers[3] = phoneInputValue;
     } else if (questionId === 4) {
       formData.append("recentCompany", answers[4]); // Append the recent company
+    } else if (questionId === 5) {
+      answers[5] = linkedInInputValue
     }
   
     formData.append("answers", answersJSON);
@@ -463,6 +487,8 @@
             answers={answers}
             handleAnswerChange={handleAnswerChange}
             fullNameError={fullNameError}
+            linkedInInputValue={linkedInInputValue}  
+            setLinkedInInputValue={setLinkedInInputValue}  
             emailError={emailError}
             phoneError={phoneError}
           />
