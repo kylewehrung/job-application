@@ -10,6 +10,8 @@ function OpenEndedQuestions({
   phoneInputValue,
   fullNameInputValue,
   setFullNameInputValue,
+  linkedInInputValue,
+  setLinkedInInputValue,
   answers,
   handleAnswerChange,
   fullNameError,
@@ -59,6 +61,8 @@ function OpenEndedQuestions({
                         : question.id === 4
                         ? answers[4]
                         : answers[question.id] || ""
+                        ? question.id === 5
+                        : linkedInInputValue
                     }
                     onChange={(e) => {
                       if (question.id === 1) {
@@ -70,6 +74,9 @@ function OpenEndedQuestions({
                       } else if (question.id === 4) {
                         console.log("Recent Company Input:", e.target.value);
                         handleAnswerChange(4, e.target.value);
+                      } else if (question.id === 5) {
+                        console.log(linkedInInputValue)
+                        setLinkedInInputValue(e.target.value)
                       } else {
                         handleAnswerChange(question.id, e.target.value);
                       }

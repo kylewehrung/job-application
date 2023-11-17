@@ -177,25 +177,6 @@
   
   
     
-    const extractExperienceAndSevenWords = (pdfText) => {
-      // Try to extract experience text
-      const experienceText = extractExperienceText(pdfText);
-      
-      if (experienceText) {
-        return experienceText;
-      }
-    
-      // If experience text isn't found, extract 7 words before mm/yyyy - Present using regex
-      const regex = /(?:^|[\s,.;])((?:\S+\s+){1,7})\d{1,2}\/\d{4}\s*-\s*Present/i;
-      const match = pdfText.match(regex);
-    
-      if (match) {
-        const text = match[1].trim();
-        return text;
-      }
-    
-      return null; // Return null if no relevant text is found
-    };
     
     
     
@@ -241,7 +222,7 @@
       }
     
       if (linkedinUrl) {
-        allAnswers[5] = linkedinUrl; // Assuming input 5 is for LinkedIn URL
+        allAnswers[5] = linkedinUrl; 
       }
     
       // Update the entire answers object with all of the extracted values
@@ -262,7 +243,7 @@
       return pdfText.match(emailRegex);
     };
   
-  
+    
     // Helper function to extract phone numbers using regex
     const extractPhones = (pdfText) => {
       const phoneRegex = /(\d{3}[-.\s]??\d{3}[-.\s]??\d{4}|\(\d{3}\)[-?.\s]??\d{3}[-.\s]??\d{4}|\d{3}[-.\s]??\d{4})/g;
@@ -270,7 +251,7 @@
     };
   
   
-  // Helper function to extract first and last names
+    // Helper function to extract first and last names
   const extractNames = (pdfText) => {
     // Implement a regular expression or other logic to extract first and last names
     const nameRegex = /(\b[A-Z][a-z]*\b)/g;
@@ -285,21 +266,55 @@
   
     return null;
   };
+
+
+
+
+
+
+  // Helper function to extract most recent company
+  const extractExperienceAndSevenWords = (pdfText) => {
+    // Try to extract experience text
+    const experienceText = extractExperienceText(pdfText);
+    
+    if (experienceText) {
+      return experienceText;
+    }
   
+    // If experience text isn't found, extract 7 words before mm/yyyy - Present using regex
+    const regex = /(?:^|[\s,.;])((?:\S+\s+){1,7})\d{1,2}\/\d{4}\s*-\s*Present/i;
+    const match = pdfText.match(regex);
+  
+    if (match) {
+      const text = match[1].trim();
+      return text;
+    }
+  
+    return null; // Return null if no relevant text is found
+  };
+
+
+
+
+
   
 
-  // Helper function to extract LinkedIn URL
+// Helper function to extract LinkedIn URL
 const extractLinkedInUrl = (pdfText) => {
-  const linkedinRegex = /linkedin\.com\/\S+/gi;
-  const match = pdfText.match(linkedinRegex);
+  // A regular expression specifically for LinkedIn profiles
+  const linkedinRegex = /https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+/g;
+  const matches = pdfText.match(linkedinRegex);
 
-  if (match) {
-    return match[0];
+  if (matches) {
+    // Return the first LinkedIn URL found
+    console.log("LinkedIn URL:", matches[0]);
+    return matches[0];
   }
 
   return null;
 };
-  
+
+
   
   
   
@@ -440,6 +455,7 @@ const extractLinkedInUrl = (pdfText) => {
     } else if (questionId === 4) {
       formData.append("recentCompany", answers[4]); // Append the recent company
     } else if (questionId === 5) {
+      console.log(linkedInInputValue)
       answers[5] = linkedInInputValue
     }
   
