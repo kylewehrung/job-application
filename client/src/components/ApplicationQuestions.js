@@ -301,25 +301,24 @@
 
 // Helper function to extract LinkedIn URL
 const extractLinkedInUrl = (pdfText) => {
-  // A regular expression to capture LinkedIn URLs
-  const linkedinRegex = /https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9_-]+/g;
+  // Regex to capture LinkedIn URLs embedded in the text
+  const linkedinRegex = /LinkedIn\s*:\s*(https?:\/\/[^\s]+)/i;
   const matches = pdfText.match(linkedinRegex);
 
-  if (matches) {
-    // Return the first LinkedIn URL found
-    console.log("LinkedIn URL:", matches[0]);
-    return matches[0];
+  if (matches && matches[1]) {
+    // Return the captured LinkedIn URL
+    console.log("LinkedIn URL:", matches[1]);
+    return matches[1];
   } else {
-    // If no match is found, attempt to extract LinkedIn URL from text containing "Linkedin"
-    const embeddedLinkedinRegex = /Linkedin[\s\/]\S+/gi;
-    const embeddedMatch = pdfText.match(embeddedLinkedinRegex);
+    // If no match is found, attempt to extract LinkedIn URL from text containing "LinkedIn"
+    const embeddedLinkedinRegex = /LinkedIn\s*:\s*(\S+)/gi;
+    const embeddedMatch = embeddedLinkedinRegex.exec(pdfText);
 
-    if (embeddedMatch) {
+    if (embeddedMatch && embeddedMatch[1]) {
       // Return the first embedded LinkedIn URL found
-      console.log("Embedded LinkedIn URL:", embeddedMatch[0]);
-      return embeddedMatch[0];
+      console.log("Embedded LinkedIn URL:", embeddedMatch[1]);
+      return embeddedMatch[1];
     }
-    
   }
 
   return null;
