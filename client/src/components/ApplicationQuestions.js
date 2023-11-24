@@ -298,7 +298,7 @@
 
 
   
-
+// Does not fully work, need to use some library to do this when I come back to it.
 // Helper function to extract LinkedIn URL
 const extractLinkedInUrl = (pdfText) => {
   // Regex to capture LinkedIn URLs embedded in the text
