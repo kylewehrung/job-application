@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 import json
 
-from config import app, db  # Assuming 'api' is not used in this script
+from config import app, db 
 from models import ApplicationQuestion, User, Answer
 
 CORS(app)
