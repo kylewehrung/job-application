@@ -1,0 +1,11 @@
+{
+    "frontend": {
+      "config": {
+        "SourceDir": "client",
+        "DistributionDir": "client/build",
+        "BuildCommand": "npm run-script build --prefix client",
+        "StartCommand": "npm run-script start"
+      }
+    }
+  }
+  
