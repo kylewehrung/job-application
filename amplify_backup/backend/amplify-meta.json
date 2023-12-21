@@ -1,0 +1,36 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-jobapplication-dev-125849-authRole",
+      "UnauthRoleArn": "arn:aws:iam::560384637585:role/amplify-jobapplication-dev-125849-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::560384637585:role/amplify-jobapplication-dev-125849-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-jobapplication-dev-125849-deployment",
+      "UnauthRoleName": "amplify-jobapplication-dev-125849-unauthRole",
+      "StackName": "amplify-jobapplication-dev-125849",
+      "StackId": "arn:aws:cloudformation:us-east-1:560384637585:stack/amplify-jobapplication-dev-125849/32178c70-9abb-11ee-ad56-12a54f863603",
+      "AmplifyAppId": "d18qm42kcedw1i"
+    }
+  },
+  "hosting": {
+    "S3AndCloudFront": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3AndCloudFront",
+      "output": {
+        "CloudFrontSecureURL": "https://d2ai7hj6gu661w.cloudfront.net",
+        "S3BucketSecureURL": "https://jobapplication-20231214130558-hostingbucket-dev.s3.amazonaws.com",
+        "CloudFrontOriginAccessIdentity": "E1VFUD6ALUD3ZQ",
+        "WebsiteURL": "http://jobapplication-20231214130558-hostingbucket-dev.s3-website-us-east-1.amazonaws.com",
+        "CloudFrontDistributionID": "EKDPWGRKZPFGY",
+        "Region": "us-east-1",
+        "HostingBucketName": "jobapplication-20231214130558-hostingbucket-dev",
+        "CloudFrontDomainName": "d2ai7hj6gu661w.cloudfront.net"
+      },
+      "lastPushTimeStamp": "2023-12-21T21:12:58.701Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-jobapplication-dev-125849-deployment/amplify-cfn-templates/hosting/template.json",
+        "logicalId": "hostingS3AndCloudFront"
+      }
+    }
+  }
+}

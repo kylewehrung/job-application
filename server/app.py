@@ -8,6 +8,7 @@ import json
 from config import app, db 
 from models import ApplicationQuestion, User, Answer
 
+
 CORS(app)
 
 class Signup(Resource):
