@@ -1,7 +1,8 @@
 .env
 server/__pycache__/
 server/instance/
-
+config.py
+zappa_settings.json
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*

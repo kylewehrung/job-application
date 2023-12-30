@@ -1,10 +1,12 @@
 {
     "dev": {
-        "app_function": "app.app",
-        "aws_region": "us-east-1",
-        "profile_name": "KyleWehrung",
-        "project_name": "server",
-        "runtime": "python3.8",
-        "s3_bucket": "job-app-zappa-bucket"
+      "app_function": "app.app",
+      "aws_region": "us-east-1",
+      "profile_name": "KyleWehrung",
+      "project_name": "server",
+      "runtime": "python3.8",
+      "s3_bucket": "job-app-zappa-bucket",
+      "SECRETS_MANAGER_ARN": "arn:aws:secretsmanager:us-east-1:560384637585:secret:JobAppSecretNameDB-d7FQS6"
     }
-}
+  }
+  
